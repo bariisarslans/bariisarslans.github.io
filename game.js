@@ -112,9 +112,7 @@ let componentsData = {
             fontSize: '20px',
             background: 'white',
             fontColor: 'gray',
-            type: 'circle', // square | circle | round
-            // type: 'round', // square | circle | round
-            // type: 'square', // square | circle | round
+            type: 'round', // square | circle | round
             countDown: {
                 id: 'rmc-count-down',
             },
@@ -173,7 +171,7 @@ let componentsData = {
 // Düşen ürünler ile ilgili ayarlar
 let productSettings = {
     productIdPrefix: 'item',
-    totalProductCount: 1,
+    totalProductCount: 40,
     productTimeOutArray: [],
     productSize: 75,
     turn: false
