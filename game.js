@@ -81,7 +81,7 @@ let componentsData = {
         }
     },
     rulesScreen: {
-        bgImage: "https://app.visilabs.net/download/loreal/Game/MobilSenaryolari/ekranlar/2-min.png",
+        bgImage: "2-min.png",
         id: "rmc-rules-screen",
         title: { // OPTIONAL
             use: true, // optional seçeneklerde true ise kullanılıyor, false ise kullanılmıyor
