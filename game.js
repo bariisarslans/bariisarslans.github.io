@@ -13,8 +13,8 @@ let screens = {
 
 // Aktif/Pasif sayfalar
 let activePageData = {
-    mailSubsScreen: false,
-    rulesScreen: false,
+    mailSubsScreen: true,
+    rulesScreen: true,
 };
 
 // Default ayarlar
