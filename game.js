@@ -1,5 +1,3 @@
-// try {
-
 // LOCAL VARIABLES
 let UPDATE_PRODUCT_INTERVAL, SCORE = 0, DURATION, HEIGHT = window.innerHeight;
 
@@ -15,8 +13,8 @@ let screens = {
 
 // Aktif/Pasif sayfalar
 let activePageData = {
-    mailSubsScreen: true,
-    rulesScreen: true,
+    mailSubsScreen: false,
+    rulesScreen: false,
 };
 
 // Default ayarlar
@@ -231,7 +229,7 @@ let gameSettings = {
     intersectionPoint: 70, // Kesişim noktası.(sepet boyutu veya civarı olması ideal noktadır)(Performans kaybı yaşanmaması için otomatik hesaplatılmamıştır)
     basketId: 'basket',
     basketSize: 150,
-    lowPowerMode: false, // true ise daha az kontrol yapar, daha az görsel efekt uygular
+    lowPowerMode: true, // true ise daha az kontrol yapar, daha az görsel efekt uygular
 }
 
 // Kupon kodları
@@ -279,6 +277,12 @@ let couponCodes = {
     39: "BCWM8P",
     40: "BCWKN0",
 };
+
+// Init
+function initGame(responseConfig) {
+    console.log("responseConfig",responseConfig);
+    config();
+}
 
 // Başlangıçta açılacak sayfa kontrolü
 function pageChecker() {
@@ -438,6 +442,7 @@ function createMailSubsScreen() {
             if (emailStatus == true) {
                 if (document.querySelector("#" + componentsData.mailSubsScreen.emailPermission.id) && document.querySelector("#" + componentsData.mailSubsScreen.secondPermission.id)) {
                     if (document.querySelector("#" + componentsData.mailSubsScreen.emailPermission.id).checked && document.querySelector("#" + componentsData.mailSubsScreen.secondPermission.id).checked) {
+                        utils.subscribe(email);
                         if (document.querySelector("#" + componentsData.mailSubsScreen.id)) {
                             document.querySelector("#" + componentsData.mailSubsScreen.id).remove();
                             if (!activePageData.rulesScreen) {
@@ -479,6 +484,7 @@ function createCloseButton() {
     closeButton.style.transform = "translate3d(0,0,3px)";
 
     closeButton.addEventListener("click", function () {
+        utils.close();
         document.querySelector("#" + generalData.id) ? document.querySelector("#" + generalData.id).remove() : null;
         document.querySelector("#" + componentsData.mailSubsScreen.id) ? document.querySelector("#" + componentsData.mailSubsScreen.id).remove() : null;
         document.querySelector("#" + componentsData.rulesScreen.id) ? document.querySelector("#" + componentsData.rulesScreen.id).remove() : null;
@@ -590,6 +596,7 @@ function createGameScreen() {
     setTimeout(() => {
         createBasket();
         startGame();
+        utils.sendReport();
     }, 1);
 }
 
@@ -1013,7 +1020,11 @@ let utils = {
 
         return "unknown";
     },
+    winCheck: () => {
+        return SCORE > 0 ? true : false
+    },
     copyToClipboard: () => {
+        console.log("NATIVE COPYCLIPBORD");
             if (window.Android) {
                 Android.copyToClipboard(couponCodes[SCORE])
             } else if (window.webkit.messageHandlers.eventHandler) {
@@ -1023,8 +1034,38 @@ let utils = {
                 })
             }
     },
-    winCheck: () => {
-        return SCORE > 0 ? true : false
+    sendReport: () => {
+        console.log("NATIVE SENDREPORT");
+        if (window.Android) {
+            Android.sendReport()
+        } else if (window.webkit && window.webkit.messageHandlers) {
+            window.webkit.messageHandlers.eventHandler.postMessage({
+                method: "sendReport"
+            })
+        }       
+    },
+    close: () => {
+        console.log("NATIVE CLOSE");
+        if (window.Android) {
+            Android.close()
+        } else if (window.webkit && window.webkit.messageHandlers) {
+            window.webkit.messageHandlers.eventHandler.postMessage({
+                method: "close"
+            })
+        }
+    },
+    subscribe: (email) => {
+        console.log("NATIVE SUBSCRIBE");
+        if(!email) return
+        
+        if (window.Android) {
+            Android.subscribeEmail(email.trim())
+        } else if (window.webkit && window.webkit.messageHandlers) {
+            window.webkit.messageHandlers.eventHandler.postMessage({
+                method: "subscribeEmail",
+                email: email.trim()
+            })
+        }
     }
 };
 
@@ -1074,8 +1115,6 @@ function config() {
     createCloseButton();
 }
 
-window.onload = config();
-
-// } catch (error) {
-//     console.log("Catch ERRÖR", error);
-// }
+window.saveCodeGotten = () => {
+    return couponCodes[SCORE]
+}
