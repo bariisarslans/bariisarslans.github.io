@@ -937,6 +937,8 @@ function createFinishScreen() {
 
 function finish() {
     createFinishScreen();
+    utils.saveCodeGotten()
+    
     document.querySelector('#' + componentsData.gameScreen.id).remove();
 }
 
@@ -1066,6 +1068,17 @@ let utils = {
                 email: email.trim()
             })
         }
+    },
+    saveCodeGotten: () => {
+        console.log("NATIVE CODE GOTTEN");
+        if (window.Android) {
+            Android.saveCodeGotten(couponCodes[SCORE])
+        } else if (window.webkit && window.webkit.messageHandlers) {
+            window.webkit.messageHandlers.eventHandler.postMessage({
+                method: "saveCodeGotten",
+                email: couponCodes[SCORE]
+            })
+        }
     }
 };
 
@@ -1113,8 +1126,4 @@ function config() {
     utils.calculateTotalDuration();
     pageChecker();
     createCloseButton();
-}
-
-window.saveCodeGotten = () => {
-    return couponCodes[SCORE]
 }
