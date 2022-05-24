@@ -1,9 +1,8 @@
-// LOCAL VARIABLES
 let UPDATE_PRODUCT_INTERVAL, SCORE = 0, DURATION, HEIGHT = window.innerHeight;
 
 let MAIN_COMPONENT = document.createElement("DIV");
 
-// Sayfa numaraları(Navigasyon)
+// Page nums
 let screens = {
     form: 1,
     rules: 2,
@@ -11,13 +10,15 @@ let screens = {
     finish: 4
 };
 
-// Aktif/Pasif sayfalar
+
 let activePageData = {
     mailSubsScreen: true,
     rulesScreen: true,
 };
 
-// Default ayarlar
+/**
+ * Defaults 
+ * */ 
 let generalData = {
     id: 'rmc-gift-catch',
     bgColor: 'aqua',
@@ -26,19 +27,21 @@ let generalData = {
     fontColor: 'gray',
     fontName: 'Helvetica',
     closeButtonId: 'rmc-close-button',
-    closeButton: 'true', // Web view kapatma butonu mantıksız olabilir,
+    closeButton: 'true',
     closeButtonColor: 'black',
     borderRadius: '10px',
     scoreBoardRadius: '5px',
     difficulty: 4
 };
 
-// Sayfa içi elemanların default ayarları
+/**
+ * Components defaults
+ */
 let componentsData = {
     mailSubsScreen: {
         id: "rmc-mail-subs-screen",
         title: { // OPTIONAL
-            use: true, // optional seçeneklerde true ise kullanılıyor, false ise kullanılmıyor
+            use: true, 
             text: 'İndirim Kazan',
             textColor: 'lightblue',
             fontSize: '19px'
@@ -64,7 +67,7 @@ let componentsData = {
             url: 'www.google.com',
         },
         button: { // REQUIRED
-            use: true, // Zorunlu olduğu için bu olmaması lazım ama iş açıklamasında buton ekle seçeneği var.
+            use: true, 
             id: 'rmc-mail-subs-button',
             text: 'Kaydet ve Devam Et',
             textColor: 'darkblue',
@@ -82,7 +85,7 @@ let componentsData = {
         bgImage: "2-min.png",
         id: "rmc-rules-screen",
         title: { // OPTIONAL
-            use: true, // optional seçeneklerde true ise kullanılıyor, false ise kullanılmıyor
+            use: true, 
             text: 'Kurallar',
             textColor: 'black',
             fontSize: '19px'
@@ -94,7 +97,7 @@ let componentsData = {
             fontSize: '15px'
         },
         button: { // REQUIRED
-            use: true, // Zorunlu olduğu için bu olmaması lazım ama iş açıklamasında buton ekle seçeneği var.
+            use: true,
             id: 'rmc-rules-button',
             text: 'Oyuna Başla',
             textColor: 'darkblue',
@@ -122,7 +125,7 @@ let componentsData = {
     finishScreen: {
         id: 'rmc-finish-screen',
         title: { // OPTIONAL
-            use: true, // optional seçeneklerde true ise kullanılıyor, false ise kullanılmıyor
+            use: true, 
             text: 'Tebrikler',
             loseText: 'Malesef',
             textColor: 'lightblue',
@@ -166,7 +169,9 @@ let componentsData = {
     }
 };
 
-// Düşen ürünler ile ilgili ayarlar
+/**
+ * Product settings
+ */
 let productSettings = {
     productIdPrefix: 'item',
     totalProductCount: 40,
@@ -175,7 +180,9 @@ let productSettings = {
     turn: false
 }
 
-// Ürün görselleri
+/**
+ * Product img
+ */ 
 let productImgs = [
     'https://app.visilabs.net/download/loreal/Game/MobilSenaryolari/products/1.png',
     'https://app.visilabs.net/download/loreal/Game/MobilSenaryolari/products/2.png',
@@ -189,15 +196,17 @@ let productImgs = [
     'https://app.visilabs.net/download/loreal/Game/MobilSenaryolari/products/10.png',
 ]
 
-// Kutuların düşme hızı ayarları
+/**
+ * Box drop speed setting
+ */
 let difficulty = {
-    // Seviyeye göre kullanılacak değerler
+    // Selected level
     use: {
         boxTransition: 30,
         boxBottom: 50,
         boxInterval: 200,
     },
-    // Zorluk seviyeleri
+    // Levels
     easy: {
         difficulty: 'easy',
         boxTransition: 30,
@@ -224,17 +233,20 @@ let difficulty = {
     }
 }
 
-// Oyun sayfası ayarları
+/**
+ * Game page settins
+*/
 let gameSettings = {
-    intersectionPoint: 70, // Kesişim noktası.(sepet boyutu veya civarı olması ideal noktadır)(Performans kaybı yaşanmaması için otomatik hesaplatılmamıştır)
+    intersectionPoint: 70, // Intersection point (basket size or around is the ideal point) (It is not calculated automatically to avoid loss of performance)
     basketId: 'basket',
     basketSize: 150,
-    lowPowerMode: true, // true ise daha az kontrol yapar, daha az görsel efekt uygular
+    lowPowerMode: true, // If true, it does less checking, applies less visual effects
 }
 
-// Kupon kodları
+/**
+ * Coupons
+*/
 let couponCodes = {
-    /* İndirim kodları */
     0: "KAZANAMADINIZ",
     1: "BGJ7S1",
     2: "BDGJ72",
@@ -278,13 +290,17 @@ let couponCodes = {
     40: "BCWKN0",
 };
 
-// Init
+/**
+ * Init
+ */
 function initGame(responseConfig) {
     console.log("responseConfig",responseConfig);
     config();
 }
 
-// Başlangıçta açılacak sayfa kontrolü
+/**
+ * Start page check
+ */
 function pageChecker() {
     createMainComponents();
     if (activePageData.mailSubsScreen) {
@@ -299,7 +315,9 @@ function pageChecker() {
     }
 }
 
-// Tüm sayfaların ekleneceği asıl div
+/*
+ * Main(container) component
+ */
 function createMainComponents() {
     MAIN_COMPONENT.id = generalData.id;
     MAIN_COMPONENT.style.width = "100%";
@@ -311,7 +329,9 @@ function createMainComponents() {
     document.body.appendChild(MAIN_COMPONENT);
 }
 
-// Mail üyelik formu
+/**
+ * Mail subscribe form screen
+ */
 function createMailSubsScreen() {
     var mailSubsScreen = document.createElement("DIV");
     mailSubsScreen.id = componentsData.mailSubsScreen.id;
@@ -466,7 +486,9 @@ function createMailSubsScreen() {
     MAIN_COMPONENT.appendChild(mailSubsScreen);
 }
 
-// Kapatma butonu
+/**
+ * Close button
+ */
 function createCloseButton() {
     var closeButton = document.createElement("BUTTON");
     closeButton.id = generalData.closeButtonId;
@@ -496,7 +518,9 @@ function createCloseButton() {
     MAIN_COMPONENT.appendChild(closeButton);
 }
 
-// Kurallar sayfası
+/**
+ * Rules screen
+ */
 function createRulesScreen() {
     var rulesScreen = document.createElement("DIV");
     rulesScreen.id = componentsData.rulesScreen.id;
@@ -507,7 +531,6 @@ function createRulesScreen() {
     rulesScreen.style.top = "0";
     rulesScreen.style.left = "0";
     rulesScreen.style.zIndex = "997";
-    // rulesScreen.style.transform = " translate3d(0,0,3px)";
 
     var rulesIMG = document.createElement("DIV");
     rulesIMG.style.width = "100%";
@@ -573,7 +596,9 @@ function createRulesScreen() {
 
 }
 
-// Oyun alanı
+/**
+ * Game area
+ */
 function createGameScreen() {
     var gameScreen = document.createElement("DIV");
     gameScreen.id = componentsData.gameScreen.id;
@@ -600,7 +625,9 @@ function createGameScreen() {
     }, 1);
 }
 
-// Altta hareket eden sepeti oluşturan fonksiyon
+/**
+ * Basket 
+ */
 function createBasket() {
     var bar = document.createElement("div");
     barStatu = true;
@@ -613,7 +640,6 @@ function createBasket() {
     bar.style.bottom = "0px";
     bar.style.left = "50%";
     bar.style.zIndex = "9999";
-    // bar.style.border = "1px red solid";
     bar.style.backgroundRepeat = "no-repeat";
     bar.style.backgroundSize = "contain";
     bar.style.backgroundImage = "url('" + generalData.basketImg + "')";
@@ -663,7 +689,9 @@ function createBasket() {
     document.querySelector('#' + componentsData.gameScreen.id).appendChild(bar);
 }
 
-// Düşecek ürünleri oluşturan fonksiyon
+/**
+ * Function that creates products to fall
+*/
 function createProduct(id, url) {
     var div = document.createElement('div');
     div.id = id;
@@ -716,12 +744,11 @@ function updateProduct(id) {
             }
 
             if (
-                (productLeftCorner + (productSettings.productSize / 2)) >= basketLeftCorner && // Ürünün sol köşesi, sepetin sol köşesinden BÜYÜK olacak
-                productLeftCorner <= (basketLeftCorner + gameSettings.basketSize) && // Ürünün sol köşesi sepetin sağ köşesinden KÜÇÜK olacak
-                (productLeftCorner + (productSettings.productSize / 2)) <= (basketLeftCorner + gameSettings.basketSize) && // Ürünün sağ köşesi sepetin sağ köşesinden KÜÇÜK olacak (Yarısı içine girerse kabul edilir)
+                (productLeftCorner + (productSettings.productSize / 2)) >= basketLeftCorner && 
+                productLeftCorner <= (basketLeftCorner + gameSettings.basketSize) && 
+                (productLeftCorner + (productSettings.productSize / 2)) <= (basketLeftCorner + gameSettings.basketSize) && 
                 catchable == 'true'
             ) {
-                // console.log("ÜRÜN"+productLeftCorner+'\n'+'SEPETİN SOL KÖŞESİ'+basketLeftCorner+'\n'+'SEPETİN SOL KÖŞESİ'+(basketLeftCorner + gameSettings.basketSize));
                 SCORE++;
 
                 document.querySelector('#' + componentsData.gameScreen.scoreboard.score.id).innerHTML = SCORE + ' PUAN';
@@ -744,10 +771,8 @@ function updateProduct(id) {
             if (id === productSettings.productIdPrefix + (productSettings.totalProductCount - 1)) {
                 if (!document.querySelector('#' + productSettings.productIdPrefix + (productSettings.totalProductCount - 1))) {
                     clearInterval(UPDATE_PRODUCT_INTERVAL);
-                    // document.querySelector("body").style.userSelect = "auto";
                     isRun = false;
                     barStatu = false;
-                    // vlGameFinish();
                     console.log("Game finish");
                     finish();
                 }
@@ -756,7 +781,9 @@ function updateProduct(id) {
     }
 }
 
-// Ürünlerin akışı sırasında yapılan işlemler
+/**
+ * Operations during the flow of products
+ */
 function updateProductOperation() {
     UPDATE_PRODUCT_INTERVAL = setInterval(() => {
         for (let i = 0; i < productSettings.totalProductCount; i++) {
@@ -765,7 +792,9 @@ function updateProductOperation() {
     }, difficulty.use.boxInterval);
 }
 
-// Puan tablosunu oluşturan fonksiyon
+/**
+ * Score board
+ */
 function createScoreBoard() {
     var dashboard = document.createElement("div");
     dashboard.id = componentsData.gameScreen.scoreboard.id;
@@ -942,7 +971,7 @@ function finish() {
     document.querySelector('#' + componentsData.gameScreen.id).remove();
 }
 
-// Araçlar
+
 let utils = {
     randNum: (min, max) => {
         return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -1082,7 +1111,9 @@ let utils = {
     }
 };
 
-// Zorluk seviyesi kontrolü
+/**
+ * Difficulty level check
+ */
 function setDifficulty() {
     switch (generalData.difficulty) {
         case 1:
@@ -1109,7 +1140,9 @@ function setDifficulty() {
     console.log(difficulty.use)
 }
 
-// Kutuların kaçıncı saniyede düşmeye başlayacağını belirleyen timeout array
+/**
+ * Box timeouts
+ */
 function timeOuts(minDiff, maxDiff) {
     let beforeNumber = 0;
     for (let i = 0; i < productSettings.totalProductCount; i++) {
@@ -1119,7 +1152,9 @@ function timeOuts(minDiff, maxDiff) {
     }
 }
 
-// Başlangıçta çalışacak ayarlama fonksiyonları
+/**
+ * Start configs
+ */
 function config() {
     document.body.setAttribute('style', '-webkit-user-select:none');
     setDifficulty();
