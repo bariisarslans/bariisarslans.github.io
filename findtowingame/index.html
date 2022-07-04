@@ -7,12 +7,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="ScreenOrientation" content="autoRotate:disabled">
     <title>Gift Game</title>
-    
 </head>
 
 <body>
-    <a href="giftcatchgame"><h1>Gift Catch</h1></a><br/>
-    <a href="findtowingame"><h1>Find To Win</h1></a>
+    <script src="game.js"></script>
+    <script>
+        window.initFindToWin = (responseConfig) => {
+            initFindToWinGame(responseConfig);
+        }; 
+
+        // Use example findToWin
+        window.initFindToWin("asd")
+
+    </script>
 </body>
 
 </html>
