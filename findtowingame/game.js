@@ -726,6 +726,8 @@ function addPairIcon(id) {
     icon.style.backgroundColor = 'green';
     icon.style.position = 'relative';
     icon.style.color = '#fff';
+    icon.style.borderTopLeftRadius = '10px';
+    icon.style.borderTopRightRadius = '10px';
     document.querySelector("#"+id).appendChild(icon)
 }
 
