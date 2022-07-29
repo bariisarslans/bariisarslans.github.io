@@ -1,4 +1,4 @@
-let UPDATE_PRODUCT_INTERVAL, SCORE = 0, DURATION, HEIGHT = window.innerHeight, WIDTH = window.innerWidth;
+let UPDATE_PRODUCT_INTERVAL, SCORE = 0, DURATION, HEIGHT = window.innerHeight, WIDTH = window.innerWidth, PAIR_COUNTER = 0, LAST_CLICKED_CARD_ID = null, PAIR_COUNT = 0, MAX_PAIR_COUNT=0, CLICKABLE=true, CLICKABLE_DURATION = 1000;
 
 let MAIN_COMPONENT = document.createElement("DIV");
 
@@ -12,8 +12,8 @@ let screens = {
 
 
 let activePageData = {
-    mailSubsScreen: false,
-    rulesScreen: false,
+    mailSubsScreen: true,
+    rulesScreen: true,
 };
 
 /**
@@ -208,14 +208,16 @@ let cardSettings = {
     cardMargin: 10,
     cardIdPrefix: 'item',
     totalCardCount: 6,
+    duration: 500,
 }
 
 /**
  * Game page settins
 */
 let gameSettings = {
-    duration: 30,
-    gameAreaHeight: HEIGHT*0.6
+    duration: 230,
+    gameAreaHeight: HEIGHT * 0.6,
+    matchedIconEnable: true
 }
 
 /**
@@ -264,6 +266,8 @@ let couponCodes = {
     39: "BCWM8P",
     40: "BCWKN0",
 };
+
+let pair = [];
 
 /**
  * Init
@@ -613,7 +617,7 @@ function createGameScreen() {
 }
 
 function createCard(data, i) {
-    let id = data.name + i, turn=false;
+    let id = data.name + i, turn = false;
     var card = document.createElement('div');
     card.id = id;
     card.style.width = cardSettings.cardWidth + 'px';
@@ -632,7 +636,7 @@ function createCard(data, i) {
     front.style.backgroundSize = 'cover';
     front.style.backgroundImage = "url('" + data.imgUrl + "')";
     front.style.transformStyle = 'preserve-3d';
-    front.style.transition = 'all .5s cubic-bezier(1, 0.99, 0, -0.02) 0s';
+    front.style.transition = 'all '+cardSettings.duration+'ms cubic-bezier(1, 0.99, 0, -0.02) 0s';
     front.style.position = 'absolute';
     front.style.backfaceVisibility = 'hidden';
     front.style.borderRadius = '10px';
@@ -646,7 +650,7 @@ function createCard(data, i) {
     back.style.backgroundSize = 'cover';
     back.style.backgroundImage = "url('https://picsum.photos/id/29/300/600')";
     back.style.transformStyle = 'preserve-3d';
-    back.style.transition = 'all .5s cubic-bezier(1, 0.99, 0, -0.02) 0s';
+    back.style.transition = 'all '+cardSettings.duration+'ms cubic-bezier(1, 0.99, 0, -0.02) 0s';
     back.style.position = 'absolute';
     back.style.backfaceVisibility = 'hidden';
     back.style.borderRadius = '10px';
@@ -654,35 +658,111 @@ function createCard(data, i) {
     card.appendChild(front);
     card.appendChild(back);
 
-    card.addEventListener("click",()=>{
-        console.log("CLICKED "+ id,data);
-        if (turn) {
-            front.style.transform = "rotate3d(0, 1, 0, 180deg)"
-            back.style.transform = "rotate3d(0, 1, 0, 0deg)"
+    card.addEventListener("click", ()=>{
+        if (CLICKABLE) {
+            open(card.id, data)
         }
-        else {
-            front.style.transform = "rotate3d(0, 1, 0, 0deg)"
-            back.style.transform = "rotate3d(0, 1, 0, 180deg)"
-        }
-        turn = !turn
     })
 
     return card;
 }
 
+function removeEventListener(id) {
+    let card = document.querySelector('#'+id)
+    card.outerHTML = card.outerHTML
+}
+
+function pairController(id, data) {
+    if (LAST_CLICKED_CARD_ID == id) {
+        return
+    }
+    LAST_CLICKED_CARD_ID = id;
+    pair.push({
+        "name": data.name,
+        "id": id
+    })
+    PAIR_COUNTER++;
+    if (PAIR_COUNTER == 2) {
+        console.log("pair",pair);
+        if (pair[0].name == pair[1].name) {
+            setTimeout(() => {
+                updateScore();
+                removeEventListener(pair[0].id);
+                removeEventListener(pair[1].id);
+                gameSettings.matchedIconEnable && addPairIcon(pair[0].id)
+                gameSettings.matchedIconEnable && addPairIcon(pair[1].id)
+                resetPairCheckParams();
+                console.log(pair);
+                PAIR_COUNT++;
+                finishChecker();
+            }, cardSettings.duration+100);
+        }
+        else{
+            setTimeout(() => {
+                close(pair[0].id);
+                close(pair[1].id);
+                resetPairCheckParams();
+            }, cardSettings.duration+100);
+        }
+    }
+}
+
+function resetPairCheckParams(){
+    LAST_CLICKED_CARD_ID = null;
+    PAIR_COUNTER = 0;
+    pair = [];
+}
+
+function clickableController() {
+    CLICKABLE = false
+    setTimeout(() => {
+        CLICKABLE = true
+    }, CLICKABLE_DURATION);
+}
+
+function addPairIcon(id) {
+    var icon = document.createElement("div");
+    icon.innerText = "MATCHED "+SCORE;
+    icon.style.backgroundColor = 'green';
+    icon.style.position = 'relative';
+    icon.style.color = '#fff';
+    document.querySelector("#"+id).appendChild(icon)
+}
+
+function open(cardId, data) {
+    // console.log("CLICKED " + cardId + ":", data);
+    let card = document.querySelectorAll('#' + cardId + '>div');
+    let front = card[0];
+    let back = card[1];
+    front.style.transform = "rotate3d(0, 1, 0, 0deg)"
+    back.style.transform = "rotate3d(0, 1, 0, 180deg)"
+    clickableController();
+    pairController(cardId, data)
+}
+
+function close(cardId) {
+    let card = document.querySelectorAll('#' + cardId + '>div');
+    let front = card[0];
+    let back = card[1];
+    front.style.transform = "rotate3d(0, 1, 0, 180deg)"
+    back.style.transform = "rotate3d(0, 1, 0, 0deg)"
+}
+
+function updateScore(){
+    SCORE++;
+    document.querySelector('#' + componentsData.gameScreen.scoreboard.score.id).innerHTML = SCORE + ' PUAN';
+
+}
+
 function startGame() {
-    componentsData.gameScreen.cards.forEach((row,i) => {
+    componentsData.gameScreen.cards.forEach((row, i) => {
         row.forEach((card) => {
             console.log("card", card);
             if (document.querySelector('#' + componentsData.gameScreen.id) && document.querySelector('#' + componentsData.gameScreen.gameArea)) {
-                document.querySelector('#' + componentsData.gameScreen.gameArea).appendChild(createCard(card,i));
+                document.querySelector('#' + componentsData.gameScreen.gameArea).appendChild(createCard(card, i));
             }
         });
     });
-}
-
-function turn () {
-
 }
 
 /**
@@ -864,6 +944,18 @@ function finish() {
     document.querySelector('#' + componentsData.gameScreen.id).remove();
 }
 
+function maxPairCalculator() {
+    componentsData.gameScreen.cards.forEach(card => {
+        MAX_PAIR_COUNT += card.length/2
+    });
+}
+
+function finishChecker() {
+    if (PAIR_COUNT >= MAX_PAIR_COUNT) {
+        finish();
+    }
+}
+
 
 let utils = {
     randNum: (min, max) => {
@@ -872,8 +964,8 @@ let utils = {
     cardSizeCalculate: () => {
         const rowItemCount = componentsData.gameScreen.cards[0].length;
         const colmItemCount = componentsData.gameScreen.cards.length;
-        const w = (WIDTH-(rowItemCount*(cardSettings.cardMargin*2)))/rowItemCount;
-        const h = (gameSettings.gameAreaHeight-(colmItemCount*(cardSettings.cardMargin*2)))/colmItemCount;
+        const w = (WIDTH - (rowItemCount * (cardSettings.cardMargin * 2))) / rowItemCount;
+        const h = (gameSettings.gameAreaHeight - (colmItemCount * (cardSettings.cardMargin * 2))) / colmItemCount;
 
         cardSettings.cardWidth = w;
         cardSettings.cardHeight = h;
@@ -908,6 +1000,7 @@ let utils = {
             if (tt <= 0) {
                 that.elem.innerHTML = '00:00.00';
                 clearInterval(that.timer);
+                finish();
             } else {
                 var mi = Math.floor(tt / (60 * 100));
                 var ss = Math.floor((tt - mi * 60 * 100) / 100);
@@ -1010,7 +1103,9 @@ let utils = {
  */
 function config() {
     document.body.setAttribute('style', '-webkit-user-select:none');
+    CLICKABLE_DURATION = cardSettings.duration
     utils.cardSizeCalculate(); // Card datası geldikten sonra çalıştırılmalı.
+    maxPairCalculator();
     pageChecker();
     createCloseButton();
 }
