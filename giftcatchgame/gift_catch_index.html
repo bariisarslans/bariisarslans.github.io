@@ -10,15 +10,12 @@
 </head>
 
 <body>
-    <script src="game.js"></script>
+    <script src="gift_catch.js"></script>
     <script>
-        window.initFindToWin = (responseConfig) => {
-            initFindToWinGame(responseConfig);
-        }; 
-
-        // Use example findToWin
-        window.initFindToWin("asd")
-
+        if (window.Android) {
+            let responseConfig = Android.getResponse();
+            initGame(responseConfig);
+        }
     </script>
 </body>
 
