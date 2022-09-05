@@ -248,7 +248,7 @@ function initGame(responseConfig) {
     promoCodeCalculator(res.promo_codes)
 
     // General data
-    generalData.difficulty = res.game_elements.downward_speed;
+    generalData.difficulty = parseInt(res.game_elements.downward_speed);
     generalData.basketImg = res.game_elements.gift_catcher_image;
     generalData.bgColor = ext.background_color;
     generalData.bgImg = ext.background_image;
@@ -816,6 +816,7 @@ function updateProduct(id) {
                 (productLeftCorner + (productSettings.productSize / 2)) <= (basketLeftCorner + gameSettings.basketSize) &&
                 catchable == 'true'
             ) {
+                utils.playSound();
                 SCORE++;
 
                 document.querySelector('#' + componentsData.gameScreen.scoreboard.score.id).innerHTML = SCORE + ' PUAN';
@@ -1175,6 +1176,10 @@ let utils = {
                 email: couponCodes[SCORE]
             })
         }
+    },
+    playSound: () => {
+        var audio = new Audio('https://bariisarslans.github.io/giftcatchgame/basket.mp3');
+        audio.play();
     }
 };
 
