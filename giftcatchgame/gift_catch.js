@@ -223,17 +223,9 @@ let componentsData = {
             textColor: 'darkblue',
             buttonColor: 'lightblue',
             fontSize: '15px',
-        },
-        goButton: { // OPTIONAL
-            use: true,
-            id: 'rmc-finish-go-button',
-            text: 'Go to link',
-            textColor: 'darkblue',
-            buttonColor: 'lightblue',
-            fontSize: '15px',
-            androidLink: 'https://www.google.com',
-            iOSLink: 'https://www.facebook.com'
-        },
+            androidLink: '',
+            iOSLink: ''
+        }
     }
 };
 /**
@@ -343,12 +335,8 @@ function initGame(responseConfig) {
     componentsData.finishScreen.button.textColor = ext.copybutton_text_color;
     componentsData.finishScreen.button.fontSize = ext.copybutton_text_size + 'px';
     componentsData.finishScreen.button.buttonColor = ext.copybutton_color;
-
-    componentsData.finishScreen.goButton.textColor = ext.copybutton_text_color;
-    componentsData.finishScreen.goButton.fontSize = ext.copybutton_text_size + 'px';
-    componentsData.finishScreen.goButton.buttonColor = ext.copybutton_color;
-    componentsData.finishScreen.goButton.androidLink = res.android_lnk;
-    componentsData.finishScreen.goButton.iOSLink = res.ios_lnk;
+    componentsData.finishScreen.button.androidLink = res.android_lnk;
+    componentsData.finishScreen.button.iOSLink = res.ios_lnk;
 
     config();
 }
@@ -998,32 +986,13 @@ function createFinishScreen() {
         copyButton.addEventListener('click', function () {
             utils.copyToClipboard();
         });
-    }
 
-    if (componentsData.finishScreen.goButton.use) {
-        var goButton = document.createElement("div");
-        goButton.id = componentsData.finishScreen.goButton.id;
-        goButton.style.backgroundColor = componentsData.finishScreen.goButton.buttonColor;
-        goButton.style.color = componentsData.finishScreen.goButton.textColor;
-        goButton.style.padding = "15px 30px";
-        goButton.style.fontSize = componentsData.finishScreen.goButton.fontSize;
-        goButton.style.borderRadius = generalData.borderRadius;
-        goButton.style.width = "fit-content";
-        goButton.style.cursor = "pointer";
-        goButton.style.zIndex = "3";
-        goButton.style.fontWeight = "bolder";
-        goButton.style.position = "absolute";
-        goButton.style.bottom = "70px";
-        goButton.style.left = "50%";
-        goButton.style.transform = "translate(-50%, 0%)";
-        goButton.style.fontFamily = generalData.fontName;
-        goButton.innerText = componentsData.finishScreen.goButton.text;
+        copyButton.addEventListener("click", function () {
+            if (utils.getMobileOperatingSystem() == 'iOS' && componentsData.finishScreen.button.iOSLink)
+                location.href = componentsData.finishScreen.button.iOSLink
 
-        finishScreen.appendChild(goButton);
-        console.log(utils.getMobileOperatingSystem());
-
-        goButton.addEventListener("click", function () {
-            location.href = utils.getMobileOperatingSystem() == 'iOS' ? componentsData.finishScreen.goButton.iOSLink : componentsData.finishScreen.goButton.androidLink
+            if (utils.getMobileOperatingSystem() == 'Android' && componentsData.finishScreen.button.androidLink)
+                location.href = componentsData.finishScreen.button.androidLink
         });
     }
 
