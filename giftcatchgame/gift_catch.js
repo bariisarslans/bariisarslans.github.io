@@ -512,8 +512,6 @@ function createMailSubsScreen() {
     activePageData.rulesScreen && createRulesScreen();
 
     submit.addEventListener("click", function () {
-        console.log("SUBMIT BUTTON CLICKER");
-        alert("SUBMIT BUTTON CLICKED")
         if (document.querySelector("#" + componentsData.mailSubsScreen.emailInput.id)) {
             var email = document.querySelector("#" + componentsData.mailSubsScreen.emailInput.id).value.toLowerCase();
             var pattern = new RegExp("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,}");
@@ -521,7 +519,7 @@ function createMailSubsScreen() {
             if (emailStatus == true) {
                 if (document.querySelector("#" + componentsData.mailSubsScreen.emailPermission.id) && document.querySelector("#" + componentsData.mailSubsScreen.secondPermission.id)) {
                     if (document.querySelector("#" + componentsData.mailSubsScreen.emailPermission.id).checked && document.querySelector("#" + componentsData.mailSubsScreen.secondPermission.id).checked) {
-                        // utils.subscribe(email);
+                        utils.subscribe(email);
                         if (document.querySelector("#" + componentsData.mailSubsScreen.id)) {
                             document.querySelector("#" + componentsData.mailSubsScreen.id).remove();
                             if (!activePageData.rulesScreen) {
@@ -1161,30 +1159,20 @@ let utils = {
     },
     loadAndPlaySound: () => {
         var audio = document.createElement("audio")
-        audio.src='https://bariisarslans.github.io/giftcatchgame/sound.mp3';
+        audio.src=generalData.sound;
         audio.preload="auto";
-        audio.autoplay=true;
+        // audio.autoplay=true;
         audio.loop=true;
         document.querySelector('head').appendChild(audio);
-        // try {
-            // AUDIO = new Audio("https://bariisarslans.github.io/giftcatchgame/basket.mp3");
-            // AUDIO.ended = function() {console.log("loadeddata")};
-            // AUDIO.play();
-            // AUDIO.autoplay=true;
-            // AUDIO.loop=true;
-            // AUDIO.loadedmetadata = function() {console.log("loadedmetadata")};
-            // AUDIO.loadstart = function() {console.log("loadstart")};
-            // AUDIO.canplaythrough = function() {console.log("canplaythrough")};
-            // AUDIO.canplay = function() {console.log("canplay")};
-            // AUDIO.progress = function() {console.log("progress")};
-        // } catch (error) {
-        //     console.log(error);
-        // }
+        audio.play();
     },
     pauseSound: () => {
         try {
-            if (AUDIO) {
-                !AUDIO.paused && AUDIO.pause();
+            const audio = document.querySelector("audio")
+            if (audio) {
+                !audio.paused && audio.pause();
+            }else{
+                console.log("not closed sounnd");
             }
         } catch (error) {
             console.log(error);
