@@ -519,7 +519,7 @@ function createMailSubsScreen() {
             if (emailStatus == true) {
                 if (document.querySelector("#" + componentsData.mailSubsScreen.emailPermission.id) && document.querySelector("#" + componentsData.mailSubsScreen.secondPermission.id)) {
                     if (document.querySelector("#" + componentsData.mailSubsScreen.emailPermission.id).checked && document.querySelector("#" + componentsData.mailSubsScreen.secondPermission.id).checked) {
-                        utils.subscribe(email);
+                        // utils.subscribe(email);
                         if (document.querySelector("#" + componentsData.mailSubsScreen.id)) {
                             document.querySelector("#" + componentsData.mailSubsScreen.id).remove();
                             if (!activePageData.rulesScreen) {
