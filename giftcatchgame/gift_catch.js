@@ -1160,9 +1160,11 @@ let utils = {
     loadAndPlaySound: () => {
         var audio = document.createElement("audio")
         audio.src=generalData.sound;
-        audio.preload="auto";
-        // audio.autoplay=true;
-        audio.loop=true;
+		audio.currentTime = 0;
+		audio.setAttribute("playsinline", true);
+		audio.setAttribute("autoplay", true);
+		audio.setAttribute("preload", "auto");
+		audio.setAttribute("loop", true);
         document.querySelector('head').appendChild(audio);
         audio.play();
     },
