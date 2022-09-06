@@ -248,6 +248,7 @@ function initGame(responseConfig) {
     generalData.closeButtonColor = ext.close_button_color;
     generalData.fontName = ext.font_family;
     generalData.sound = 'https://bariisarslans.github.io/giftcatchgame/sound.mp3';//res.game_elements.sound_url;
+    utils.loadSound();
 
     if (ext.custom_font_family_android && utils.getMobileOperatingSystem() == 'Android') {
         generalData.fontName = ext.custom_font_family_android;
@@ -541,10 +542,6 @@ function createMailSubsScreen() {
     mailSubsScreen.appendChild(submit);
     mailSubsScreen.appendChild(container);
     MAIN_COMPONENT.appendChild(mailSubsScreen);
-
-        
-        utils.loadAndPlaySound();
-      
 }
 
 /**
@@ -1093,7 +1090,7 @@ let utils = {
             return "Android";
         }
 
-        if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        if (/iPad|iPhone|iPod|Mac/.test(userAgent) && !window.MSStream) {
             return "iOS";
         }
 
@@ -1157,23 +1154,29 @@ let utils = {
             })
         }
     },
-    loadAndPlaySound: () => {
-        var audio = document.createElement("audio")
-        audio.src=generalData.sound;
-		audio.currentTime = 0;
-		audio.setAttribute("playsinline", true);
-		audio.setAttribute("autoplay", true);
-		audio.setAttribute("preload", "auto");
-		audio.setAttribute("loop", true);
-        document.querySelector('head').appendChild(audio);
-        audio.play();
+    loadSound: () => {
+        AUDIO = document.createElement("audio")
+        AUDIO.src = generalData.sound;
+        AUDIO.currentTime = 0;
+        AUDIO.setAttribute("playsinline", true);
+        AUDIO.setAttribute("preload", "auto");
+        AUDIO.setAttribute("loop", true);
+        document.querySelector('head').appendChild(AUDIO);
+        console.log(utils.getMobileOperatingSystem());
+        if(utils.getMobileOperatingSystem()=='iOS'){
+            let html = document.querySelector('html');
+            html.addEventListener('touchstart',()=>{AUDIO.play();html.removeEventListener('touchstart',()=>{AUDIO.play();})})
+            html.addEventListener('click',()=>{AUDIO.play();html.removeEventListener('click',()=>{AUDIO.play();})})
+        }else{
+            AUDIO.play();
+        }
     },
     pauseSound: () => {
         try {
             const audio = document.querySelector("audio")
             if (audio) {
                 !audio.paused && audio.pause();
-            }else{
+            } else {
                 console.log("not closed sounnd");
             }
         } catch (error) {
