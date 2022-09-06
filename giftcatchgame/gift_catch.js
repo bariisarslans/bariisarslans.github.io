@@ -350,6 +350,7 @@ function config() {
     utils.calculateTotalDuration();
     pageChecker();
     createCloseButton();
+    utils.playSound();
 }
 
 /**
@@ -489,13 +490,14 @@ function createMailSubsScreen() {
         container.appendChild(secondPermission);
     }
 
-    var submit = document.createElement("div");
+    var submit = document.createElement("button");
     submit.id = componentsData.mailSubsScreen.button.id;
     submit.style.backgroundColor = componentsData.mailSubsScreen.button.buttonColor;
     submit.style.color = componentsData.mailSubsScreen.button.textColor;
     submit.style.padding = "15px 30px";
     submit.style.fontSize = componentsData.mailSubsScreen.button.fontSize;
     submit.style.borderRadius = generalData.borderRadius;
+    submit.style.border = 0;
     submit.style.position = "absolute";
     submit.style.bottom = "70px";
     submit.style.left = "50%";
@@ -618,13 +620,14 @@ function createRulesScreen() {
     }
 
 
-    var submit = document.createElement("div");
+    var submit = document.createElement("button");
     submit.id = componentsData.rulesScreen.button.id;
     submit.style.backgroundColor = componentsData.rulesScreen.button.buttonColor;
     submit.style.color = componentsData.rulesScreen.button.textColor;
     submit.style.padding = "15px 30px";
     submit.style.fontSize = componentsData.rulesScreen.button.fontSize;
     submit.style.borderRadius = generalData.borderRadius;
+    submit.style.border = 0;
     submit.style.position = "absolute";
     submit.style.bottom = "70px";
     submit.style.left = "50%";
@@ -804,7 +807,6 @@ function updateProduct(id) {
                 (productLeftCorner + (productSettings.productSize / 2)) <= (basketLeftCorner + gameSettings.basketSize) &&
                 catchable == 'true'
             ) {
-                utils.playSound();
                 SCORE++;
 
                 document.querySelector('#' + componentsData.gameScreen.scoreboard.score.id).innerHTML = SCORE + ' PUAN';
@@ -962,13 +964,14 @@ function createFinishScreen() {
     container.appendChild(_score);
 
     if (SCORE > 0) {
-        var copyButton = document.createElement("div");
+        var copyButton = document.createElement("button");
         copyButton.id = componentsData.finishScreen.button.id;
         copyButton.style.backgroundColor = componentsData.finishScreen.button.buttonColor;
         copyButton.style.color = componentsData.finishScreen.button.textColor;
         copyButton.style.padding = "15px 30px";
         copyButton.style.fontSize = componentsData.finishScreen.button.fontSize;
         copyButton.style.borderRadius = generalData.borderRadius;
+        copyButton.style.border = 0;
         copyButton.style.width = "fit-content";
         copyButton.style.margin = "10px auto";
         copyButton.style.cursor = "pointer";
@@ -1147,7 +1150,7 @@ let utils = {
         }
     },
     playSound: () => {
-        var audio = new Audio('https://bariisarslans.github.io/giftcatchgame/basket.mp3');
+        var audio = new Audio('https://bariisarslans.github.io/giftcatchgame/sound.mp3');
         audio.play();
     }
 };
