@@ -1,4 +1,4 @@
-let UPDATE_PRODUCT_INTERVAL, SCORE = 0, DURATION, HEIGHT = window.innerHeight;
+let UPDATE_PRODUCT_INTERVAL, SCORE = 0, DURATION, HEIGHT = window.innerHeight, AUDIO;
 
 let MAIN_COMPONENT = document.createElement("DIV");
 
@@ -24,6 +24,7 @@ let generalData = {
     bgColor: 'white',
     bgImg: 'https://picsum.photos/seed/picsum/400/800',
     basketImg: 'https://app.visilabs.net/download/loreal/Game/MobilSenaryolari/materials/bag-min.png',
+    sound: 'https://bariisarslans.github.io/giftcatchgame/basket.mp3',
     fontColor: 'gray',
     fontName: 'Helvetica',
     closeButtonId: 'rmc-close-button',
@@ -246,6 +247,7 @@ function initGame(responseConfig) {
     generalData.bgImg = ext.background_image;
     generalData.closeButtonColor = ext.close_button_color;
     generalData.fontName = ext.font_family;
+    generalData.sound = 'https://bariisarslans.github.io/giftcatchgame/basket.mp3';//res.game_elements.sound_url;
 
     if (ext.custom_font_family_android && utils.getMobileOperatingSystem() == 'Android') {
         generalData.fontName = ext.custom_font_family_android;
@@ -350,7 +352,6 @@ function config() {
     utils.calculateTotalDuration();
     pageChecker();
     createCloseButton();
-    utils.playSound();
 }
 
 /**
@@ -540,6 +541,10 @@ function createMailSubsScreen() {
     mailSubsScreen.appendChild(submit);
     mailSubsScreen.appendChild(container);
     MAIN_COMPONENT.appendChild(mailSubsScreen);
+
+        
+        utils.loadAndPlaySound();
+      
 }
 
 /**
@@ -569,6 +574,7 @@ function createCloseButton() {
         document.querySelector("#" + componentsData.rulesScreen.id) ? document.querySelector("#" + componentsData.rulesScreen.id).remove() : null;
         document.querySelector("#" + generalData.closeButtonId) ? document.querySelector("#" + generalData.closeButtonId).remove() : null;
         document.documentElement.style.overflow = 'auto';
+        utils.pauseSound();
         console.log('Oyun Kapatıldı');
     });
 
@@ -984,10 +990,12 @@ function createFinishScreen() {
 
         _score.addEventListener('click', function () {
             utils.copyToClipboard();
+            utils.pauseSound();
         });
 
         copyButton.addEventListener('click', function () {
             utils.copyToClipboard();
+            utils.pauseSound();
         });
 
         copyButton.addEventListener("click", function () {
@@ -1149,10 +1157,30 @@ let utils = {
             })
         }
     },
-    playSound: () => {
-        var audio = new Audio('https://bariisarslans.github.io/giftcatchgame/sound.mp3');
-        audio.play();
-    }
+    loadAndPlaySound: () => {
+        // try {
+            AUDIO = new Audio(generalData.sound);
+            AUDIO.autoplay=true;
+            AUDIO.loop=true;
+            AUDIO.loadeddata = function() {console.log("loadeddata")};
+            AUDIO.loadedmetadata = function() {console.log("loadedmetadata")};
+            AUDIO.loadstart = function() {console.log("loadstart")};
+            AUDIO.canplaythrough = function() {console.log("canplaythrough")};
+            AUDIO.canplay = function() {console.log("canplay")};
+            AUDIO.progress = function() {console.log("progress")};
+        // } catch (error) {
+        //     console.log(error);
+        // }
+    },
+    pauseSound: () => {
+        try {
+            if (AUDIO) {
+                !AUDIO.paused && AUDIO.pause();
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    },
 };
 
 function promoCodeCalculator(data) {
