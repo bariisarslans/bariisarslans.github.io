@@ -512,6 +512,7 @@ function createMailSubsScreen() {
     activePageData.rulesScreen && createRulesScreen();
 
     submit.addEventListener("click", function () {
+        console.log("SUBMIT BUTTON CLICKER");
         if (document.querySelector("#" + componentsData.mailSubsScreen.emailInput.id)) {
             var email = document.querySelector("#" + componentsData.mailSubsScreen.emailInput.id).value.toLowerCase();
             var pattern = new RegExp("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,}");
