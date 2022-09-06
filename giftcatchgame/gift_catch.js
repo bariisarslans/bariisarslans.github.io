@@ -247,7 +247,7 @@ function initGame(responseConfig) {
     generalData.bgImg = ext.background_image;
     generalData.closeButtonColor = ext.close_button_color;
     generalData.fontName = ext.font_family;
-    generalData.sound = 'https://bariisarslans.github.io/giftcatchgame/basket.mp3';//res.game_elements.sound_url;
+    generalData.sound = 'https://bariisarslans.github.io/giftcatchgame/sound.mp3';//res.game_elements.sound_url;
 
     if (ext.custom_font_family_android && utils.getMobileOperatingSystem() == 'Android') {
         generalData.fontName = ext.custom_font_family_android;
@@ -1158,16 +1158,23 @@ let utils = {
         }
     },
     loadAndPlaySound: () => {
+        var audio = document.createElement("audio")
+        audio.src='https://bariisarslans.github.io/giftcatchgame/sound.mp3';
+        audio.preload="auto";
+        audio.autoplay=true;
+        audio.loop=true;
+        document.querySelector('head').appendChild(audio);
         // try {
-            AUDIO = new Audio(generalData.sound);
-            AUDIO.autoplay=true;
-            AUDIO.loop=true;
-            AUDIO.loadeddata = function() {console.log("loadeddata")};
-            AUDIO.loadedmetadata = function() {console.log("loadedmetadata")};
-            AUDIO.loadstart = function() {console.log("loadstart")};
-            AUDIO.canplaythrough = function() {console.log("canplaythrough")};
-            AUDIO.canplay = function() {console.log("canplay")};
-            AUDIO.progress = function() {console.log("progress")};
+            // AUDIO = new Audio("https://bariisarslans.github.io/giftcatchgame/basket.mp3");
+            // AUDIO.ended = function() {console.log("loadeddata")};
+            // AUDIO.play();
+            // AUDIO.autoplay=true;
+            // AUDIO.loop=true;
+            // AUDIO.loadedmetadata = function() {console.log("loadedmetadata")};
+            // AUDIO.loadstart = function() {console.log("loadstart")};
+            // AUDIO.canplaythrough = function() {console.log("canplaythrough")};
+            // AUDIO.canplay = function() {console.log("canplay")};
+            // AUDIO.progress = function() {console.log("progress")};
         // } catch (error) {
         //     console.log(error);
         // }
