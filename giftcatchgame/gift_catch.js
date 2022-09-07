@@ -1097,40 +1097,47 @@ let utils = {
         return "unknown";
     },
     getBrowser: () => {
-        // Opera 8.0+
-        var isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
-        if(isOpera) return "Opera"
+        try {
 
-        // Firefox 1.0+
-        var isFirefox = typeof InstallTrigger !== 'undefined';
-        if(isFirefox) return "Firefox"
 
-        // Safari 3.0+ "[object HTMLElementConstructor]" 
-        var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && window['safari'].pushNotification));
-        if(!isSafari) isSafari = /iP(ad|hone|od).+Version\/[\d\.]+.*Safari/i.test(navigator.userAgent);
+            // Opera 8.0+
+            var isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+            if (isOpera) return "Opera"
 
-        if(isSafari) return "Safari"
+            // Firefox 1.0+
+            var isFirefox = typeof InstallTrigger !== 'undefined';
+            if (isFirefox) return "Firefox"
 
-        // Internet Explorer 6-11
-        var isIE = /*@cc_on!@*/false || !!document.documentMode;
-        if(isIE) return "IE"
+            // Safari 3.0+ "[object HTMLElementConstructor]" 
+            var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && window['safari'].pushNotification));
+            if (!isSafari) isSafari = /iP(ad|hone|od).+Version\/[\d\.]+.*Safari/i.test(navigator.userAgent);
 
-        // Edge 20+
-        var isEdge = !isIE && !!window.StyleMedia;
-        if(isEdge) return "Edge"
+            if (isSafari) return "Safari"
 
-        // Chrome 1 - 79
-        var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
-        if(isChrome) return "Chrome"
+            // Internet Explorer 6-11
+            var isIE = /*@cc_on!@*/false || !!document.documentMode;
+            if (isIE) return "IE"
 
-        // Edge (based on chromium) detection
-        var isEdgeChromium = isChrome && (navigator.userAgent.indexOf("Edg") != -1);
-        if(isEdgeChromium) return "EdgeChromium"
+            // Edge 20+
+            var isEdge = !isIE && !!window.StyleMedia;
+            if (isEdge) return "Edge"
 
-        // Blink engine detection
-        // var isBlink = (isChrome || isOpera) && !!window.CSS;
+            // Chrome 1 - 79
+            var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+            if (isChrome) return "Chrome"
 
-        return "unknown"
+            // Edge (based on chromium) detection
+            var isEdgeChromium = isChrome && (navigator.userAgent.indexOf("Edg") != -1);
+            if (isEdgeChromium) return "EdgeChromium"
+
+            // Blink engine detection
+            // var isBlink = (isChrome || isOpera) && !!window.CSS;
+
+            return "unknown"
+        } catch (error) {
+            console.log("getBrowser error",error);
+            return "unknown"
+        }
     },
     winCheck: () => {
         return SCORE > 0 ? true : false
@@ -1168,6 +1175,7 @@ let utils = {
     },
     subscribe: (email) => {
         console.log("NATIVE SUBSCRIBE");
+
         if (!email) return
 
         if (window.Android) {
@@ -1199,22 +1207,17 @@ let utils = {
         AUDIO.setAttribute("loop", true);
         AUDIO.setAttribute("autoplay", true);
         document.querySelector('head').appendChild(AUDIO);
-        console.log("OS",utils.getMobileOperatingSystem());
-        console.log("Browser",utils.getBrowser());
-            document.body.innerHTML = utils.getBrowser();
-            alert(utils.getBrowser())
         try {
-        if (utils.getBrowser() == 'Safari') {
-            let html = document.querySelector('html');
-                html.addEventListener('touchstart', () => { AUDIO.play(); html.removeEventListener('touchstart', () => {  }) })
-                html.addEventListener('click', () => { AUDIO.play(); html.removeEventListener('click', () => {  }) })
-            } 
-            // else {
-            //     AUDIO.play();
-            // }
+            if (utils.getBrowser() == 'Safari') {
+                let html = document.querySelector('html');
+                html.addEventListener('touchstart', () => { AUDIO.play(); html.removeEventListener('touchstart', () => { }) })
+                html.addEventListener('click', () => { AUDIO.play(); html.removeEventListener('click', () => { }) })
+            }
+            else {
+                AUDIO.play();
+            }
         } catch (error) {
-            console.log(error);
-            document.body.innerHTML = error;
+            console.log("loadSound error",error);
         }
     },
     pauseSound: () => {
