@@ -1107,6 +1107,8 @@ let utils = {
 
         // Safari 3.0+ "[object HTMLElementConstructor]" 
         var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && window['safari'].pushNotification));
+        if(!isSafari) isSafari = /iP(ad|hone|od).+Version\/[\d\.]+.*Safari/i.test(navigator.userAgent);
+
         if(isSafari) return "Safari"
 
         // Internet Explorer 6-11
@@ -1197,16 +1199,16 @@ let utils = {
         AUDIO.setAttribute("loop", true);
         document.querySelector('head').appendChild(AUDIO);
         console.log(utils.getMobileOperatingSystem());
+        try {
         if (utils.getBrowser() == 'Safari') {
             let html = document.querySelector('html');
-            try {
                 html.addEventListener('touchstart', () => { AUDIO.play(); html.removeEventListener('touchstart', () => {  }) })
                 html.addEventListener('click', () => { AUDIO.play(); html.removeEventListener('click', () => {  }) })
-            } catch (error) {
-                console.log(error);
+            } else {
+                AUDIO.play();
             }
-        } else {
-            AUDIO.play();
+        } catch (error) {
+            console.log(error);
         }
     },
     pauseSound: () => {
