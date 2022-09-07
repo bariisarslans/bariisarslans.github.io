@@ -1197,6 +1197,7 @@ let utils = {
         AUDIO.setAttribute("playsinline", true);
         AUDIO.setAttribute("preload", "auto");
         AUDIO.setAttribute("loop", true);
+        AUDIO.setAttribute("autoplay", true);
         document.querySelector('head').appendChild(AUDIO);
         console.log("OS",utils.getMobileOperatingSystem());
         console.log("Browser",utils.getBrowser());
@@ -1207,9 +1208,10 @@ let utils = {
             let html = document.querySelector('html');
                 html.addEventListener('touchstart', () => { AUDIO.play(); html.removeEventListener('touchstart', () => {  }) })
                 html.addEventListener('click', () => { AUDIO.play(); html.removeEventListener('click', () => {  }) })
-            } else {
-                AUDIO.play();
-            }
+            } 
+            // else {
+            //     AUDIO.play();
+            // }
         } catch (error) {
             console.log(error);
             document.body.innerHTML = error;
