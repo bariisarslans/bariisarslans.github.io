@@ -1198,7 +1198,8 @@ let utils = {
         AUDIO.setAttribute("preload", "auto");
         AUDIO.setAttribute("loop", true);
         document.querySelector('head').appendChild(AUDIO);
-        console.log(utils.getMobileOperatingSystem());
+        console.log("OS",utils.getMobileOperatingSystem());
+        console.log("Browser",utils.getBrowser());
         try {
         if (utils.getBrowser() == 'Safari') {
             let html = document.querySelector('html');
