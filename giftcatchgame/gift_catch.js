@@ -24,7 +24,7 @@ let generalData = {
     bgColor: 'white',
     bgImg: 'https://picsum.photos/seed/picsum/400/800',
     basketImg: 'https://app.visilabs.net/download/loreal/Game/MobilSenaryolari/materials/bag-min.png',
-    sound: 'https://bariisarslans.github.io/giftcatchgame/basket.mp3',
+    sound: '',
     fontColor: 'gray',
     fontName: 'Helvetica',
     closeButtonId: 'rmc-close-button',
@@ -247,7 +247,7 @@ function initGame(responseConfig) {
     generalData.bgImg = ext.background_image;
     generalData.closeButtonColor = ext.close_button_color;
     generalData.fontName = ext.font_family;
-    generalData.sound = 'https://bariisarslans.github.io/giftcatchgame/sound.mp3';//res.game_elements.sound_url;
+    generalData.sound = res.game_elements.sound_url;
     utils.loadSound();
 
     if (ext.custom_font_family_android && utils.getMobileOperatingSystem() == 'Android') {
