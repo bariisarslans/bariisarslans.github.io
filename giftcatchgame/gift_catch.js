@@ -1200,6 +1200,8 @@ let utils = {
         document.querySelector('head').appendChild(AUDIO);
         console.log("OS",utils.getMobileOperatingSystem());
         console.log("Browser",utils.getBrowser());
+            document.body.innerHTML = utils.getBrowser();
+            alert(utils.getBrowser())
         try {
         if (utils.getBrowser() == 'Safari') {
             let html = document.querySelector('html');
@@ -1210,6 +1212,7 @@ let utils = {
             }
         } catch (error) {
             console.log(error);
+            document.body.innerHTML = error;
         }
     },
     pauseSound: () => {
