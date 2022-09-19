@@ -27,6 +27,7 @@ let generalData = {
     sound: '',
     fontColor: 'gray',
     fontName: 'Helvetica',
+    fontFiles: [],
     closeButtonId: 'rmc-close-button',
     closeButtonColor: 'black',
     borderRadius: '10px',
@@ -266,8 +267,11 @@ function androidConfigRegulator(responseConfig) {
     generalData.sound = res.game_elements.sound_url;
     utils.loadSound();
 
-    if (ext.custom_font_family_android == 'custom' && utils.getMobileOperatingSystem() == 'Android') {
+    if (ext.font_family == 'custom' && utils.getMobileOperatingSystem() == 'Android') {
         generalData.fontName = ext.custom_font_family_android;
+        generalData.fontFiles = responseConfig.fontFiles;
+        console.log('font files ',generalData.fontFiles);
+        addFonts();
     }
 
     productImgs = res.game_elements.gift_images;
@@ -684,17 +688,14 @@ function createMailSubsScreen() {
 function createAlert(text, id) {
     if (!document.querySelector('#' + id).innerText) {
         var alert = document.createElement("div");
-        alert.id = generalData.closeButtonId;
         alert.innerText = text;
         alert.style.width = "100%";
-        alert.style.color = generalData.closeButtonColor;
         alert.style.padding = "5px 10px";
-        alert.style.borderRadius = generalData.borderRadius;
-        alert.style.backgroundColor = 'rgba(0,0,0,0)';
         alert.style.zIndex = "999";
         alert.style.textAlign = "left";
         alert.style.color = "#000";
-        alert.style.fontSize= componentsData.mailSubsScreen.emailPermission.fontSize;
+        alert.style.fontSize= "14px";
+        alert.style.fontFamily = generalData.fontName;
         alert.style.transform = "translate3d(0,0,3px)";
 
         document.querySelector('#' + id).appendChild(alert)
@@ -1508,6 +1509,25 @@ function promoCodeCalculator(data) {
 
     couponCodes = codes;
 }
+
+function addFonts() {
+	if (generalData.fontFiles === undefined) {
+		return
+	}
+	var addedFontFiles = [];
+	for (var fontFileIndex in generalData.fontFiles) {
+		var fontFile = generalData.fontFiles[fontFileIndex];
+		if (addedFontFiles.includes(fontFile)) {
+			continue;
+		}
+		var fontFamily = fontFile.split(".")[0];
+		var newStyle = document.createElement('style');
+		var cssContent = "@font-face{font-family:" + fontFamily + ";src:url('" + fontFile + "');}";
+		newStyle.appendChild(document.createTextNode(cssContent));
+		document.head.appendChild(newStyle);
+		addedFontFiles.push(fontFile);
+	}
+};
 
 function fontSizeCalculator(BEFS) {
     BEFS = parseInt(BEFS)
