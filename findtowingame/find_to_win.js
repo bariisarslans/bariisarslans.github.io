@@ -188,7 +188,11 @@ let cardSettings = {
     cardIdPrefix: 'item',
     duration: 500,
     backfaceImg: 'https://picsum.photos/id/29/300/600',
-    backfaceColor: 'green'
+    backfaceColor: 'green',
+    emptyBackfaceImg: '',
+    emptyBackfaceColor: 'gray',
+    emptyFrontImg: '',
+    emptyFrontColor: 'red',
 }
 
 /**
@@ -250,6 +254,13 @@ let couponCodes = {
 
 let pair = [];
 
+function test() {
+    activePageData = {
+        mailSubsScreen: false,
+        rulesScreen: false,
+    };
+}
+
 /**
  * Init
  */
@@ -281,7 +292,7 @@ function androidConfigRegulator(responseConfig) {
     const col = res.game_elements.playground_columncount;
 
     maxPairCalculator(row, col);
-    cardSlotAdjuster(row, col, res.game_elements.card_images);
+    cardSlotAdjuster(row, col, res.game_elements.card_images); // buraya boş kart aktif mi bilgisini yolla
     promoCodeCalculator(res.promo_codes);
 
 
@@ -526,6 +537,7 @@ function iOSConfigRegulator(responseConfig) {
  * Start page check
  */
 function pageChecker() {
+    test();
     createMainComponents();
     if (activePageData.mailSubsScreen) {
         createMailSubsScreen()
@@ -1031,6 +1043,14 @@ function createCard(data, i) {
     back.style.backfaceVisibility = 'hidden';
     back.style.borderRadius = '10px';
 
+
+    if (data.empty) {
+        front.style.backgroundImage = "url('" + cardSettings.emptyFrontImg + "')";
+        front.style.backgroundColor = cardSettings.emptyFrontColor;
+        back.style.backgroundImage = "url('" + cardSettings.emptyBackfaceImg + "')";
+        back.style.backgroundColor = cardSettings.emptyBackfaceColor;
+    }
+
     card.appendChild(front);
     card.appendChild(back);
 
@@ -1045,15 +1065,22 @@ function createCard(data, i) {
 
 function cardSlotAdjuster(row, column, images) {
     let result = [];
+    // console.log("rowColTotalCountWithMod(row , column)",rowColTotalCountWithMod(row , column));
     images.forEach((url, i) => {
-        if (result.length < (row * column)) {
-            result.push({ name: 'card' + i, imgUrl: url })
-            result.push({ name: 'card' + i, imgUrl: url })
+        if (result.length < rowColTotalCountWithMod(row , column)) {
+            const cardData = {name: 'card' + (i+1), imgUrl: url}
+            result.push(cardData)
+            result.push(cardData)
         }
     });
+
+    // 3. parametre responseConfigden çekilecek 
+    if (emptyCardDataAddControl(row, column,true)) {
+        result.push({empty:true, name: 'EMPTY_CARD', imgUrl:"https://picsum.photos/id/5/300/600" })
+    }
+
     result.sort(() => (Math.random() > .5) ? 1 : -1);
 
-    // result = splitIntoChunk(result,column)
 
     result = slotCreator(row, column, result)
     console.log(result);
@@ -1062,13 +1089,25 @@ function cardSlotAdjuster(row, column, images) {
     utils.cardSizeCalculate();
 }
 
-// function splitIntoChunk(arr, chunk) {
-//     let result=[]
-//     for (i = 0; i < arr.length; i += chunk) {
-//         result.push(arr.slice(i, i + chunk))
-//     }
-//     return result;
-// }
+function emptyCardDataAddControl(row,column,emptyCardActive){
+    if(!row || !column) return false
+
+    let result = false;
+    if (emptyCardActive) {
+        result = (row * column) % 2 > 0
+    }
+
+    return result
+}
+
+function rowColTotalCountWithMod(row,column){
+    if(!row || !column) return 0
+
+    const x = row * column
+    const result = x % 2
+
+    return result > 0 ? x-1 : x
+}
 
 function slotCreator(r, c, imgs) {
     let arr = []
