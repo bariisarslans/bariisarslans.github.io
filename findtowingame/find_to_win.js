@@ -254,13 +254,6 @@ let couponCodes = {
 
 let pair = [];
 
-function test() {
-    activePageData = {
-        mailSubsScreen: false,
-        rulesScreen: false,
-    };
-}
-
 /**
  * Init
  */
@@ -281,8 +274,9 @@ function androidConfigRegulator(responseConfig) {
 
     // console.log("responseConfig", responseConfig);
 
-    // responseConfig = JSON.parse(responseConfig)
-    // responseConfig.ExtendedProps = JSON.parse(unescape(responseConfig.ExtendedProps))
+    responseConfig = JSON.parse(responseConfig)
+    responseConfig.ExtendedProps = JSON.parse(unescape(responseConfig.ExtendedProps))
+
     console.log(responseConfig);
 
     const res = responseConfig;
@@ -537,7 +531,6 @@ function iOSConfigRegulator(responseConfig) {
  * Start page check
  */
 function pageChecker() {
-    test();
     createMainComponents();
     if (activePageData.mailSubsScreen) {
         createMailSubsScreen()
