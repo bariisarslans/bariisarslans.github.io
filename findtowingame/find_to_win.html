@@ -12,7 +12,7 @@
 <body>
     <script src="find_to_win.js"></script>
     <script>
-        window.initGiftCatch = function (responseConfig) {
+        window.initFindGame = function (responseConfig) {
             initFindToWinGame(responseConfig);
         }
 
@@ -21,7 +21,7 @@
             initFindToWinGame(responseConfig);
         } else if (window.webkit.messageHandlers.eventHandler) {
             window.webkit.messageHandlers.eventHandler.postMessage({
-                method: "initGiftCatch"
+                method: "initFindGame"
             })
         }
     </script>
