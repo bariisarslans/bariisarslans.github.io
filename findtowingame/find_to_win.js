@@ -1,4 +1,4 @@
-let UPDATE_PRODUCT_INTERVAL, SCORE = 0, DURATION, HEIGHT = window.innerHeight, WIDTH = window.innerWidth, PAIR_COUNTER = 0, LAST_CLICKED_CARD_ID = null, PAIR_COUNT = 0, MAX_PAIR_COUNT = 0, CLICKABLE = true, CLICKABLE_DURATION = 1000, PAIRS = [], AUDIO, TIME_INTERVAL;
+let UPDATE_PRODUCT_INTERVAL, SCORE = 0, DURATION, HEIGHT = window.innerHeight, WIDTH = window.innerWidth, PAIR_COUNTER = 0, LAST_CLICKED_CARD_ID = null, PAIR_COUNT = 0, MAX_PAIR_COUNT = 0, CLICKABLE = true, CLICKABLE_DURATION = 1000, PAIRS = [], AUDIO, TIME_INTERVAL, EMAIL='', REPORT='';
 
 let MAIN_COMPONENT = document.createElement("DIV");
 
@@ -359,7 +359,8 @@ function androidConfigRegulator(responseConfig) {
     componentsData.finishScreen.couponCode.fontSize = fontSizeCalculator(ext.game_result_elements.text_size) + 'px';
 
 
-
+    try { REPORT = res.report.click; } 
+    catch (error) { console.log("ERROR",res.report); }
 }
 
 function iOSConfigRegulator(responseConfig) {
@@ -386,6 +387,7 @@ function iOSConfigRegulator(responseConfig) {
     cardSettings.backfaceColor = res.gameElementsExtended.backofcardsColor;
     cardSettings.emptyBackfaceImg = res.gameElementsExtended.blankcardImage;
     cardSettings.emptyFrontImg = res.gameElementsExtended.blankcardImage;
+    utils.loadSound();
 
     if (res.font_family == 'custom' && utils.getMobileOperatingSystem() == 'iOS') {
         generalData.fontName = res.custom_font_family_ios;
@@ -483,6 +485,9 @@ function iOSConfigRegulator(responseConfig) {
     componentsData.finishScreen.couponCode.background = ARGBtoRGBA(res.promocode_background_color);
     componentsData.finishScreen.couponCode.textColor = ARGBtoRGBA(res.promocode_text_color);
     componentsData.finishScreen.couponCode.fontSize = fontSizeCalculator(res.gameResultElementsExtended.textSize) + 'px';
+
+    try { REPORT = res.report.click; } 
+    catch (error) { console.log("ERROR",res.report); }
 }
 
 /**
@@ -652,7 +657,8 @@ function createMailSubsScreen() {
         if (emailChecker()) {
             removeAlert("emailAlert")
             if (emailPermitChecker() && secondPermitChecker()) {
-                utils.subscribe(document.querySelector("#" + componentsData.mailSubsScreen.emailInput.id).value.toLowerCase());
+                EMAIL = document.querySelector("#" + componentsData.mailSubsScreen.emailInput.id).value.toLowerCase()
+                utils.subscribe(EMAIL);
                 if (document.querySelector("#" + componentsData.mailSubsScreen.id)) {
                     document.querySelector("#" + componentsData.mailSubsScreen.id).remove();
                     if (!activePageData.rulesScreen) {
@@ -1729,11 +1735,13 @@ let utils = {
     saveCodeGotten: () => {
         console.log("NATIVE CODE GOTTEN");
         if (window.Android) {
-            Android.saveCodeGotten(couponCodes[SCORE])
+            Android.saveCodeGotten(couponCodes[SCORE],EMAIL,REPORT)
         } else if (window.webkit && window.webkit.messageHandlers) {
             window.webkit.messageHandlers.eventHandler.postMessage({
                 method: "saveCodeGotten",
-                email: couponCodes[SCORE]
+                code: couponCodes[SCORE],
+                email: EMAIL,
+                report: REPORT
             })
         }
     },
