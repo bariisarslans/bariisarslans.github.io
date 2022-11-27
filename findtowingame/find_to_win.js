@@ -217,13 +217,15 @@ let pair = [];
  * Init
  */
 function initFindToWinGame(responseConfig) {
-    if (utils.getMobileOperatingSystem() == 'iOS') {
-        iOSConfigRegulator(responseConfig)
-    }
-    else {
-        androidConfigRegulator(responseConfig);
-    }
+    console.log("INIT ANDROID GAME");
+    androidConfigRegulator(responseConfig);
+    // iOSConfigRegulator(responseConfig)
+    config();
+}
 
+function initFindToWinGameIOS(responseConfig) {
+    console.log("INIT IOS GAME");
+    iOSConfigRegulator(responseConfig)
     config();
 }
 
@@ -1031,8 +1033,6 @@ function createCard(data, i) {
     if (data.empty) {
         front.style.backgroundImage = "url('" + cardSettings.emptyFrontImg + "')";
         front.style.backgroundColor = cardSettings.emptyFrontColor;
-        back.style.backgroundImage = "url('" + cardSettings.emptyBackfaceImg + "')";
-        back.style.backgroundColor = cardSettings.emptyBackfaceColor;
     }
 
     card.appendChild(front);
