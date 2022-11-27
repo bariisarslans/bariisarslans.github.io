@@ -1,18 +1,18 @@
 
-let MAIN_COMPONENT = document.createElement("DIV"), _interval, AIRPLANE_MAX_RIGHT = false, SCORE = 1, EARNED_SCORE = 1, SUFFICIENT = false, PLAYING = false;
+let MAIN_COMPONENT = document.createElement("DIV"), _interval, AIRPLANE_MAX_RIGHT = false, SCORE = 1, EARNED_SCORE = 1, SUFFICIENT = false, PLAYING = false, FINISH = false;
 
 
 let speed = .3;
 let config = {
   defaults: {
-    maxScore: 50,
+    maxScore: 100,
     flowRate: speed * 1000,
     gameAreaSize: {
       width: window.innerWidth,
       height: window.innerHeight,
     },
     animationDuration: speed + "s",
-    cloudFrequency: 1, // azaldıkça sıklık artar
+    cloudFrequency: 1, // azaldıkça sıklık artar, tam sayı alır
     cloudMoveStepSize: 150, // Bulutların akış hızı
     airplaneMoveUPStepSize: 30, // Uçağın yükseliş hızı
     airplaneMoveRIGHTStepSize: 140, // Uçağın uçuş hızı
@@ -21,33 +21,49 @@ let config = {
   components: {
     airplane: {
       width: 200,
-      height: 50,
+      height: 200,
     }
   }
 }
 
 
+
+
 initGame = (gameAreaComponentId) => {
+  testGame();
   getGameAreaSize(gameAreaComponentId)
   createMainComponents(gameAreaComponentId)
   createCloseButton()
   createScoreBoard()
+  createGhostScoreBoard()
   startStopButton3D()
   buttonCSS()
+  createMsg("Uçağı Durdur İndirimi Kazan")
 
   createAirplane()
   createCloud()
+}
+
+testGame = () => {
+  config.defaults.maxScore = utils.randNum(1,10)
 }
 
 createAirplaneSceneCSS = (left, callback) => {
   var style = document.createElement("style");
   style.id = "vlAirplaneSceneStyle";
   style.innerHTML = "@keyframes airplaneScene {" +
+    "0%   {left: " + (left) + "px; transform: scale(1)}" +
+    "10%  {left: " + (left + 20) + "px; transform: scale(1.1)}" +
+    "50%  {left: " + (left) + "px; transform: scale(1.2)}" +
+    "75%  {left: " + (left - 20) + "px; transform: scale(1.1)}" +
+    "100% {left: " + (left) + "px; transform: scale(1)}" +
+    "}" +
+    "@keyframes airplaneFinishScene {" +
     "0%   {left: " + (left) + "px;}" +
-    "10%  {left: " + (left + 20) + "px;}" +
-    "50%  {left: " + (left) + "px;}" +
-    "75%  {left: " + (left - 20) + "px;}" +
-    "100% {left: " + (left) + "px;}" +
+    "10%  {left: " + (left - 40) + "px;}" +
+    "50%  {left: " + (left - 80) + "px;}" +
+    "75%  {left: " + (left - 90) + "px;}" +
+    "100% {left: " + (left + 1000) + "px;}" +
     "}";
 
   document.head.appendChild(style);
@@ -62,6 +78,7 @@ createMainComponents = (gameAreaComponentId) => {
   MAIN_COMPONENT.style.left = "0";
   MAIN_COMPONENT.style.zIndex = "9999";
   MAIN_COMPONENT.style.position = "absolute";
+  MAIN_COMPONENT.style.overflow = "hidden";
   MAIN_COMPONENT.style.background = "linear-gradient(#6B93BD, #ffffff)";
   if (gameAreaComponentId) {
     document.querySelector("#" + gameAreaComponentId).appendChild(MAIN_COMPONENT);
@@ -107,7 +124,7 @@ createScoreBoard = () => {
   dashboard.style.textDecoration = 'none';
   dashboard.style.width = "250px";
   dashboard.style.minWidth = "max-content";
-  dashboard.style.margin = "5px";
+  dashboard.style.margin = "5px -5px";
   dashboard.style.backgroundSize = "contain";
   dashboard.style.left = "10px";
   dashboard.style.borderRadius = "5px";
@@ -119,6 +136,29 @@ createScoreBoard = () => {
   _score.id = "score";
   _score.innerText = '0x';
   _score.style.transition = "1s all";
+
+  dashboard.appendChild(_score);
+  MAIN_COMPONENT.appendChild(dashboard);
+}
+
+createGhostScoreBoard = () => {
+  var dashboard = document.createElement("div");
+  dashboard.id = "vlGhostScoreboard";
+  dashboard.style.position = "absolute";
+  dashboard.style.color = "rgba(255,255,255,1)";
+  dashboard.style.textAlign = "center";
+  dashboard.style.fontFamily = "'Rubik One', sans-serif";
+  dashboard.style.textDecoration = 'none';
+  dashboard.style.transition = "1s all";
+  dashboard.style.transform = "translate(-50%, -50%)";
+  dashboard.style.left = "50%";
+  dashboard.style.top = "50%";
+
+  var _score = document.createElement("DIV");
+  _score.id = "ghostscore";
+  _score.innerText = '0x';
+  _score.style.transition = "1s all";
+  _score.style.fontSize = utils.isMobile() ? "180px" : "450px";
 
   dashboard.appendChild(_score);
   MAIN_COMPONENT.appendChild(dashboard);
@@ -142,10 +182,10 @@ getGameAreaSize = (gameAreaComponentId) => {
 createAirplane = () => {
   var airplane = document.createElement("img");
   airplane.id = "airplane";
-  airplane.src = "plane.png";
+  airplane.src = "thy.png";
   airplane.style.width = config.components.airplane.width + "px";
   airplane.style.height = config.components.airplane.height + "px";
-  airplane.style.zIndex = "9999";
+  // airplane.style.zIndex = "999";
   airplane.style.position = "absolute";
   airplane.style.bottom = "150px";
   airplane.style.left = "0px";
@@ -153,8 +193,40 @@ createAirplane = () => {
   MAIN_COMPONENT.appendChild(airplane);
 }
 
+createMsg = (text,danger) => {
+  const randId = utils.randNum(1,999999);
+  var msg = document.createElement("div");
+  msg.id = "vlMsg"+randId;
+  msg.innerText = text;
+  msg.style.zIndex = "1";
+  msg.style.padding = "20px 25px";
+  msg.style.borderRadius = "15px";
+  msg.style.position = "absolute";
+  msg.style.verticalAlign = "middle";
+  msg.style.textAlign = "center";
+  msg.style.fontFamily = "'Rubik One', sans-serif";
+  msg.style.top = "75%";
+  msg.style.opacity = "0";
+  msg.style.color = "white";
+  msg.style.background = danger ? "#fb6a78" : "rgb(107, 147, 189)";
+  msg.style.transform = "translate(-50%, -50%)";
+  msg.style.left = "50%";
+  msg.style.transition = "all .2s linear 0s";
+  MAIN_COMPONENT.appendChild(msg);
+
+  setTimeout(() => {
+    document.querySelector("#vlMsg"+randId).style.opacity = "1"
+  }, 200);
+  setTimeout(() => {
+    document.querySelector("#vlMsg"+randId).style.opacity = "0"
+  }, 2700);
+  setTimeout(() => {
+    document.querySelector("#vlMsg"+randId).remove()
+  }, 3000);
+}
+
 airplaneMove = () => {
-  if (!AIRPLANE_MAX_RIGHT) {
+  if (!AIRPLANE_MAX_RIGHT && !FINISH) {
     let airplane = document.querySelector("#airplane")
     if (airplane) {
       let airplaneLeft = parseInt(airplane.style.left)
@@ -185,6 +257,24 @@ airplaneMaxTopAnimation = () => {
   createAirplaneSceneCSS(parseInt(airplane.style.left), () => {
     airplane.style.animation = "airplaneScene 3s linear infinite"
   })
+}
+
+airplaneFinishAnimation = () => {
+  console.log("airplaneFinishAnimation");
+
+  let airplane = document.querySelector("#airplane")
+
+  createAirplaneSceneCSS(parseInt(airplane.style.left), () => {
+    airplane.style.animation = "airplaneFinishScene 2s cubic-bezier(1, 1, 1, 1)"
+    setTimeout(() => {
+      airplane.remove();
+    }, 2000);
+  })
+}
+
+startGameAnimation = (callback) => {
+  document.querySelector("#airplane").src = "thy.webp";
+  callback()
 }
 
 createCloud = () => {
@@ -253,11 +343,18 @@ updateGame = () => {
     cloudsMove()
     airplaneMove()
 
-    if (SCORE <= config.defaults.maxScore) {
-      updateScore(SCORE)
-    } else {
-      stopGame();
-      return;
+    if (!FINISH) {
+      if (SCORE <= config.defaults.maxScore) {
+        updateScore(SCORE)
+      } else {
+        FINISH = true
+        airplaneFinishAnimation()
+        if (!SUFFICIENT) {
+          missThePlane()
+        }
+        // stopGame();
+        // return;
+      }
     }
 
     if (counter >= config.defaults.cloudFrequency) {
@@ -265,7 +362,9 @@ updateGame = () => {
       createCloud();
     }
     counter++;
-    SCORE += config.defaults.scoreIncreaseStepSize;
+    if (!FINISH) {
+      SCORE += config.defaults.scoreIncreaseStepSize;
+    }
   }, config.defaults.flowRate);
 }
 
@@ -276,16 +375,24 @@ updateScore = (value) => {
   if (!SUFFICIENT) {
     let buttonScore = document.querySelector("#vl3DButton")
     buttonScore.innerText = "DURDUR (%" + (value).toFixed(0) + ")"
+
+    let ghostscore = document.querySelector("#ghostscore")
+    ghostscore.innerText = (value).toFixed(0)+"x"
+  }else{
+    let ghostscore = document.querySelector("#ghostscore")
+    ghostscore.innerText = (EARNED_SCORE).toFixed(0)+"x"
   }
 }
 
 startGame = () => {
-  updateGame();
+  startGameAnimation(()=>{
+    updateGame();
+  })
 }
 
 stopGame = () => {
   clearInterval(_interval)
-  updateScore(SCORE)
+  // updateScore(SCORE)
   console.log("OYUN BITTI " + SCORE)
   document.querySelector("#airplane").style.animation = "";
 }
@@ -297,9 +404,17 @@ sufficientGame = () => {
   }, 1000);
   SUFFICIENT = true;
   EARNED_SCORE = SCORE;
+  createMsg(EARNED_SCORE+"% indirim kazandınız.")
   let buttonScore = document.querySelector("#vl3DButton")
   buttonScore.innerText = "KAZANILAN %" + (EARNED_SCORE).toFixed(0)
   console.log("KAZANILAN PUAN " + EARNED_SCORE)
+}
+
+missThePlane = () => {
+  let button = document.querySelector("#vl3DButton");
+  button.innerText = "Uçağı Kaçırdın";
+  button.style.filter = "hue-rotate(141deg)";
+  createMsg("Uçağı kaçırdın, indirim kazanamadın.",true)
 }
 
 buttonCSS = () => {
@@ -375,14 +490,25 @@ startStopButton3D = () => {
 
 
   startOrStop = () => {
-    if (PLAYING) {
-      PLAYING = false
-      sufficientGame()
-    } else {
-      if (!SUFFICIENT) {
-        PLAYING = true
-        button.innerText = "DURDUR";
-        startGame()
+    if (!FINISH) {
+      if (PLAYING) {
+        PLAYING = false
+        sufficientGame()
+      } else {
+        if (!SUFFICIENT) {
+          PLAYING = true
+          button.innerText = "DURDUR";
+          startGame()
+        }else{
+          createMsg("Bir kere çekildikten sonra tekrar katılamazsınız.",true)
+        }
+      }
+    }else{
+      if (SUFFICIENT) {
+        createMsg(EARNED_SCORE+"% indirim kazandınız.")
+      }else{
+        button.innerText = "Uçağı Kaçırdın";
+        createMsg("Uçağı Kaçırdın",true)
       }
     }
   }
@@ -393,6 +519,13 @@ startStopButton3D = () => {
 let utils = {
   randNum: (min, max) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+  },
+  isMobile: () => {
+    if (window.innerWidth <= 600) {
+      return true
+    }else{
+      return false
+    }
   }
 }
 
