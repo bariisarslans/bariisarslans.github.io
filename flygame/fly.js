@@ -45,7 +45,7 @@ initGame = (gameAreaComponentId) => {
 }
 
 testGame = () => {
-  config.defaults.maxScore = utils.randNum(1,10)
+  config.defaults.maxScore = utils.randNum(1,50)
 }
 
 createAirplaneSceneCSS = (left, callback) => {
