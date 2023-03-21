@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="ScreenOrientation" content="autoRotate:disabled">
+    <title>Gift Game</title>
+</head>
+
+<body>
+    <script src="giftbox.js"></script>
+    <script>
+        let responseConfig = {
+            "mail_subscription": true,
+            "mail_subscription_form": {
+                "title": "Başlık",
+                "message": "Metin",
+                "placeholder": "Your e-mail",
+                "button_label": "Subscribe",
+                "emailpermit_text": "Email permit text",
+                "consent_text": "Consent permit text",
+                "check_consent_message": "Please confirm you accept the terms of use.",
+                "invalid_email_message": "Please enter a valid E-Mail Address.",
+                "success_message": "Your e-mail address has been saved."
+            },
+            "gamification_rules": {
+                "background_image": "https://imgvisilabsnet.azureedge.net/gift_box/uploaded_images/debug/112_885_816_20230215182521830.jpg",
+                "button_label": "Button Rules"
+            },
+            "game_elements": {
+                "gift_boxes": [
+                    {
+                        "image": "giftbox.png",
+                        "staticcode": "Prmcd01"
+                    },
+                    {
+                        "image": "giftbox.png",
+                        "staticcode": "Prmcd02"
+                    },
+                    {
+                        "image": "giftbox.png",
+                        "staticcode": "Prmcd03"
+                    }
+                ]
+            },
+            "game_result_elements": {
+                "image": "https://imgvisilabsnet.azureedge.net/gift_box/uploaded_images/debug/112_885_816_20230215184104901.png",
+                "title": "Tebrikler Başlık",
+                "message": "Kazandınız mesaj"
+            },
+            "copybutton_label": "Copy to clipboard",
+            "copybutton_function": "copy_redirect",
+            "ios_lnk": "ioslnk",
+            "android_lnk": "androidlnk",
+            "ExtendedProps": {
+                "background_image": "https://imgvisilabsnet.azureedge.net/gift_box/uploaded_images/debug/112_885_816_20230215184215575.png",
+                "background_color": "",
+                "font_family": "sansserif",
+                "custom_font_family_ios": "",
+                "custom_font_family_android": "",
+                "close_button_color": "black",
+                "mail_subscription_form": {
+                    "title_text_color": "orange",
+                    "title_text_size": "10",
+                    "text_color": "purple",
+                    "text_size": "8",
+                    "button_color": "aqua",
+                    "button_text_color": "darkred",
+                    "button_text_size": "10",
+                    "emailpermit_text_size": "7",
+                    "emailpermit_text_url": "www.google.com",
+                    "consent_text_size": "7",
+                    "consent_text_url": "www.facebook.com"
+                },
+                "gamification_rules": {
+                    "button_color": "#02005e",
+                    "button_text_color": "#e3e3e3",
+                    "button_text_size": "10"
+                },
+                "game_elements": {
+                    "scoreboard_background_color":"red"
+                },
+                "game_result_elements": {
+                    "title_text_color": "#7e3e3e",
+                    "title_text_size": "10",
+                    "coupon_text_color": "#7e3e3e",
+                    "message_text_size": "10",
+                    "text_color": "green",
+                    "text_size": "10"
+                },
+                "promocode_background_color": "#f66f6f",
+                "promocode_text_color": "#1b0c0c",
+                "copybutton_color": "#767676",
+                "copybutton_text_color": "#8a0000",
+                "copybutton_text_size": "8",
+                "promocode_banner_text": "sadadasddf",
+                "promocode_banner_text_color": "#844040",
+                "promocode_banner_background_color": "#c90b0b",
+                "promocode_banner_button_label": "QWEQWQWE"
+            }
+        }
+        initFindToWinGame(responseConfig);
+
+        // window.initFindGame = function (responseConfig) {
+        //     initFindToWinGame(responseConfig);
+        // }
+
+        // if (window.Android) {
+        //     let responseConfig = Android.getResponse();
+        //     initFindToWinGame(responseConfig);
+        // } else if (window.webkit.messageHandlers.eventHandler) {
+        //     window.webkit.messageHandlers.eventHandler.postMessage({
+        //         method: "initFindGame"
+        //     })
+        // }
+    </script>
+</body>
+
+</html>

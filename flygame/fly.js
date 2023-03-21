@@ -5,7 +5,7 @@ let MAIN_COMPONENT = document.createElement("DIV"), _interval, AIRPLANE_MAX_RIGH
 let speed = .3;
 let config = {
   defaults: {
-    maxScore: 100,
+    maxScore: 150,
     flowRate: speed * 1000,
     gameAreaSize: {
       width: window.innerWidth,
@@ -14,8 +14,8 @@ let config = {
     animationDuration: speed + "s",
     cloudFrequency: 1, // azaldıkça sıklık artar, tam sayı alır
     cloudMoveStepSize: 150, // Bulutların akış hızı
-    airplaneMoveUPStepSize: 30, // Uçağın yükseliş hızı
-    airplaneMoveRIGHTStepSize: 140, // Uçağın uçuş hızı
+    airplaneMoveUPStepSize: 5, // Uçağın yükseliş hızı
+    airplaneMoveRIGHTStepSize: 40, // Uçağın uçuş hızı
     scoreIncreaseStepSize: 1, // Score artma hızı
   },
   components: {
@@ -30,7 +30,7 @@ let config = {
 
 
 initGame = (gameAreaComponentId) => {
-  testGame();
+  // testGame();
   getGameAreaSize(gameAreaComponentId)
   createMainComponents(gameAreaComponentId)
   createCloseButton()
@@ -45,7 +45,7 @@ initGame = (gameAreaComponentId) => {
 }
 
 testGame = () => {
-  config.defaults.maxScore = utils.randNum(1,50)
+  config.defaults.maxScore = utils.randNum(1,30)
 }
 
 createAirplaneSceneCSS = (left, callback) => {
@@ -380,7 +380,7 @@ updateScore = (value) => {
     ghostscore.innerText = (value).toFixed(0)+"x"
   }else{
     let ghostscore = document.querySelector("#ghostscore")
-    ghostscore.innerText = (EARNED_SCORE).toFixed(0)+"x"
+    ghostscore.innerText = (value).toFixed(0)+"x"
   }
 }
 

@@ -16,15 +16,94 @@
             initGame(responseConfig);
         }
 
-        
-        if (window.Android) {
-            let responseConfig = Android.getResponse();
+        var responseConfig = {
+    "actid": 284,
+    "title": "Tayfun for VP-1397",
+    "actiontype": "GiftRain",
+    "actiondata": {
+        "mail_subscription": true,
+        "mail_subscription_form": {
+            "title": "Title\\nTitle2",
+            "message": "Text\\nText2",
+            "placeholder": "Email-",
+            "button_label": "Okay",
+            "consent_text": "consent text",
+            "invalid_email_message": "invalid email",
+            "success_message": "successful",
+            "emailpermit_text": "permit text",
+            "check_consent_message": "consent not checked"
+        },
+        "gamification_rules": {
+            "background_image": "https://imgvisilabsnet.azureedge.net/gift_rain/uploaded_images/test/112_885_284_20220916124246967.png",
+            "button_label": "Oyuna Başla"
+        },
+        "game_elements": {
+            "gift_images": [
+                "https://imgvisilabsnet.azureedge.net/gift_rain/uploaded_images/debug/112_885_284_20220819172125590.png",
+                "https://imgvisilabsnet.azureedge.net/gift_rain/uploaded_images/debug/112_885_284_20220822101622137.png",
+                "https://imgvisilabsnet.azureedge.net/gift_rain/uploaded_images/debug/112_885_284_20220822102259320.png",
+                "https://imgvisilabsnet.azureedge.net/gift_rain/uploaded_images/debug/112_885_284_20220822102345404.png",
+                "https://imgvisilabsnet.azureedge.net/gift_rain/uploaded_images/debug/112_885_284_20220822102406297.png"
+            ],
+            "gift_catcher_image": "https://imgvisilabsnet.azureedge.net/gift_rain/uploaded_images/debug/112_885_284_20220819172244812.png",
+            "number_of_products": 10,
+            "downward_speed": "2",
+            "sound_url": "https://bariisarslans.github.io/giftcatchgame/sound.mp3"
+        },
+        "game_result_elements": {
+            "title": "first\\nsecond",
+            "message": "body text\\nText2"
+        },
+        "copybutton_label": "Copy",
+        "copybutton_function": "copy_redirect",
+        "ios_lnk": "http://iOS",
+        "android_lnk": "https://relateddigital.com/",
+        "promo_codes": [
+            {
+                "rangebottom": 1,
+                "rangetop": 1,
+                "staticcode": "StaticPromocode1-1"
+            },
+            {
+                "rangebottom": 2,
+                "rangetop": 2,
+                "staticcode": "StaticPromocode2-2"
+            },
+            {
+                "rangebottom": 3,
+                "rangetop": 3,
+                "staticcode": "StaticPromocode3-3"
+            },
+            {
+                "rangebottom": 4,
+                "rangetop": 4,
+                "staticcode": "StaticPromocode4-4"
+            },
+            {
+                "rangebottom": 5,
+                "rangetop": 10,
+                "staticcode": "StaticPromocode5-10"
+            }
+        ],
+        "ExtendedProps": "%7B%22background_image%22%3A%22https%3A%2F%2Fimgvisilabsnet.azureedge.net%2Fgift_rain%2Fuploaded_images%2Ftest%2F112_885_284_20220920162750074.jpg%22%2C%22background_color%22%3A%22%22%2C%22font_family%22%3A%22custom%22%2C%22custom_font_family_ios%22%3A%22sydneysignature%22%2C%22custom_font_family_android%22%3A%22sydneysignature%22%2C%22close_button_color%22%3A%22black%22%2C%22mail_subscription_form%22%3A%7B%22title_text_color%22%3A%22%2319bb98%22%2C%22title_text_size%22%3A%225%22%2C%22text_color%22%3A%22%231dc994%22%2C%22text_size%22%3A%225%22%2C%22button_color%22%3A%22%231dca71%22%2C%22button_text_color%22%3A%22%23000000%22%2C%22button_text_size%22%3A%225%22%2C%22emailpermit_text_size%22%3A%225%22%2C%22emailpermit_text_url%22%3A%22https%3A%2F%2Fwww.relateddigital.com%2Fen%2F%22%2C%22consent_text_size%22%3A%225%22%2C%22consent_text_url%22%3A%22https%3A%2F%2Fwww.relateddigital.com%2Fen%2F%22%7D%2C%22gamification_rules%22%3A%7B%22button_color%22%3A%22%2319cea3%22%2C%22button_text_color%22%3A%22%230f0f0f%22%2C%22button_text_size%22%3A%225%22%7D%2C%22game_elements%22%3A%7B%22scoreboard_shape%22%3A%22roundedcorners%22%2C%22scoreboard_background_color%22%3A%22%23BF16c195%22%7D%2C%22game_result_elements%22%3A%7B%22title_text_color%22%3A%22%231b1b1b%22%2C%22title_text_size%22%3A%225%22%2C%22text_color%22%3A%22%23000000%22%2C%22text_size%22%3A%225%22%7D%2C%22promocode_background_color%22%3A%22%2313e6ab%22%2C%22promocode_text_color%22%3A%22%23000000%22%2C%22copybutton_color%22%3A%22%2326ba96%22%2C%22copybutton_text_color%22%3A%22%23000000%22%2C%22copybutton_text_size%22%3A%225%22%2C%22promocode_banner_text%22%3A%22Get%20the%20code%22%2C%22promocode_banner_text_color%22%3A%22%23000000%22%2C%22promocode_banner_background_color%22%3A%22%230daf9f%22%2C%22promocode_banner_button_label%22%3A%22GETIT%22%7D",
+        "report": {
+            "impression": "",
+            "click": "OM.zn=acttype-35&OM.zpc=act-284"
+        },
+        "auth": "2C78A2F2E661D2FAE0F64A6EA0583FCD59B61C2B367527BA84B72DD1A202A6CD",
+        "type": "subscription_email",
+        "waiting_time": 0
+    },
+    "panelv2": false
+}
+        // if (window.Android) {
+            // let responseConfig = Android.getResponse();
             initGame(responseConfig);
-        } else if (window.webkit.messageHandlers.eventHandler) {
-            window.webkit.messageHandlers.eventHandler.postMessage({
-                method: "initGiftCatch"
-            })
-        }
+        // } else if (window.webkit.messageHandlers.eventHandler) {
+        //     window.webkit.messageHandlers.eventHandler.postMessage({
+        //         method: "initGiftCatch"
+        //     })
+        // }
     </script>
 </body>
 
