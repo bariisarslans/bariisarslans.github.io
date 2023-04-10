@@ -12,6 +12,7 @@
 <body>
     <script src="giftbox.js"></script>
     <script>
+        /*
         let responseConfig = {
             "mail_subscription": true,
             "mail_subscription_form": {
@@ -102,19 +103,20 @@
             }
         }
         initFindToWinGame(responseConfig);
+        */
 
-        // window.initFindGame = function (responseConfig) {
-        //     initFindToWinGame(responseConfig);
-        // }
+        window.initFindGame = function (responseConfig) {
+            initFindToWinGame(responseConfig);
+        }
 
-        // if (window.Android) {
-        //     let responseConfig = Android.getResponse();
-        //     initFindToWinGame(responseConfig);
-        // } else if (window.webkit.messageHandlers.eventHandler) {
-        //     window.webkit.messageHandlers.eventHandler.postMessage({
-        //         method: "initFindGame"
-        //     })
-        // }
+        if (window.Android) {
+            let responseConfig = Android.getResponse();
+            initFindToWinGame(responseConfig);
+        } else if (window.webkit.messageHandlers.eventHandler) {
+            window.webkit.messageHandlers.eventHandler.postMessage({
+                method: "initFindGame"
+            })
+        }
     </script>
 </body>
 
