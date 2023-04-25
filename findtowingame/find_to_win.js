@@ -1,3 +1,5 @@
+// VERSION 1.0
+
 let UPDATE_PRODUCT_INTERVAL, SCORE = 0, DURATION, HEIGHT = window.innerHeight, WIDTH = window.innerWidth, PAIR_COUNTER = 0, LAST_CLICKED_CARD_ID = null, PAIR_COUNT = 0, MAX_PAIR_COUNT = 0, CLICKABLE = true, CLICKABLE_DURATION = 1000, PAIRS = [], AUDIO, TIME_INTERVAL, EMAIL='', REPORT='';
 
 let MAIN_COMPONENT = document.createElement("DIV");
@@ -486,7 +488,7 @@ function iOSConfigRegulator(responseConfig) {
 
     componentsData.finishScreen.couponCode.background = ARGBtoRGBA(res.promocode_background_color);
     componentsData.finishScreen.couponCode.textColor = ARGBtoRGBA(res.promocode_text_color);
-    componentsData.finishScreen.couponCode.fontSize = fontSizeCalculator(res.gameResultElementsExtended.textSize) + 'px';
+    componentsData.finishScreen.couponCode.fontSize = fontSizeCalculator(res.gameResultElementsExtended.textSize) + 'px'; /////
 
     try { REPORT = res.report.click; } 
     catch (error) { console.log("ERROR",res.report); }
@@ -1339,16 +1341,15 @@ function createFinishScreen(lose) {
         }
         var _score = document.createElement("DIV");
         _score.id = 'rmc-finish-finish';
-        _score.innerHTML = SCORE + ' SANİYEDE ÇÖZDÜNÜZ';
-        _score.innerHTML += '<br> ' + couponCodes[SCORE];
+        _score.innerHTML = couponCodes[SCORE];
         _score.style.transition = "1s all";
         _score.style.padding = componentsData.gameScreen.scoreboard.type === 'circle' ? (utils.winCheck() ? '40px 30px' : '70px 20px') : '15px 10px';
         _score.style.width = 'fit-content';
-        _score.style.margin = '0 auto';
-        _score.style.color = componentsData.gameScreen.scoreboard.fontColor;
+        _score.style.margin = '0 auto'; ///// breakpoint
+        _score.style.color = componentsData.finishScreen.couponCode.textColor;
         _score.style.fontFamily = generalData.fontName;
-        _score.style.fontSize = componentsData.gameScreen.scoreboard.fontSize;
-        _score.style.background = componentsData.gameScreen.scoreboard.background;
+        _score.style.fontSize = componentsData.finishScreen.couponCode.fontSize;
+        _score.style.background = componentsData.finishScreen.couponCode.background;
         componentsData.gameScreen.scoreboard.type !== 'square' && (_score.style.borderRadius = componentsData.gameScreen.scoreboard.type == 'circle' ? '50%' : '15px');
         container.appendChild(_score);
 
