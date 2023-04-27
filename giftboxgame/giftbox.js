@@ -1,4 +1,4 @@
-// VERSION 1.0
+// VERSION 1.2
 
 let SCORE = 0,
   HEIGHT = window.innerHeight,
@@ -172,15 +172,17 @@ let couponCodes = {};
 /**
  * Init
  */
-function initGame(responseConfig) {
+function initGame(responseConfig,isIOS) {
   console.log('INITIALIZED GIFT BOX GAME');
-  configRegulator(responseConfig);
+  configRegulator(responseConfig,isIOS);
   config();
 }
 
-function configRegulator(responseConfig) {
-  // responseConfig = JSON.parse(responseConfig)
-  // responseConfig.actiondata.ExtendedProps = JSON.parse(unescape(responseConfig.actiondata.ExtendedProps))
+function configRegulator(responseConfig,isIOS) {
+  if (!isIOS) {
+    responseConfig = JSON.parse(responseConfig)
+    responseConfig.actiondata.ExtendedProps = JSON.parse(unescape(responseConfig.actiondata.ExtendedProps))
+  }
 
   const res = responseConfig.actiondata;
   const ext = res.ExtendedProps;
