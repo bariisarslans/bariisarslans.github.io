@@ -1,4 +1,4 @@
-// VERSION 1.2
+// VERSION 1.3
 
 let SCORE = 0,
   HEIGHT = window.innerHeight,
@@ -181,8 +181,8 @@ function initGame(responseConfig,isIOS) {
 function configRegulator(responseConfig,isIOS) {
   if (!isIOS) {
     responseConfig = JSON.parse(responseConfig)
-    responseConfig.actiondata.ExtendedProps = JSON.parse(unescape(responseConfig.actiondata.ExtendedProps))
   }
+  responseConfig.actiondata.ExtendedProps = JSON.parse(unescape(responseConfig.actiondata.ExtendedProps))
 
   const res = responseConfig.actiondata;
   const ext = res.ExtendedProps;
