@@ -1,4 +1,4 @@
-// VERSION 1.3
+// VERSION 1.4
 
 let SCORE = 0,
   HEIGHT = window.innerHeight,
@@ -350,6 +350,7 @@ function configRegulator(responseConfig,isIOS) {
     ext.copybutton_color
   );
   componentsData.finishScreen.button.androidLink = res.android_lnk;
+  componentsData.finishScreen.button.iOSLink = res.ios_lnk;
 
   componentsData.finishScreen.lose.buttonLabel = slashController(
     res.game_result_elements.lose_button_label
@@ -1265,16 +1266,18 @@ let utils = {
     }
   },
   winCheck: () => SCORE > 0,
-  copyToClipboard: (lose) => {
-    const args = {
-      method: 'copyToClipboard',
-      couponCode: lose ? '' : couponCodes[SCORE],
-      url: lose ? getAndroidLink(lose) : getIOSLink(lose),
-    };
-    if (window.Android)
-      window.Android.copyToClipboard(args.couponCode, args.url);
-    else if (window.webkit.messageHandlers.eventHandler)
+  copyToClipboard: () => {
+    if (window.Android){
+      window.Android.copyToClipboard(couponCodes[SCORE], getAndroidLink(false));
+    }
+    else if (window.webkit.messageHandlers.eventHandler){
+      const args = {
+        method: 'copyToClipboard',
+        couponCode: couponCodes[SCORE],
+        url: getIOSLink(false),
+      };
       window.webkit.messageHandlers.eventHandler.postMessage(args);
+    }
   },
   sendReport: () => {
     const method = 'sendReport';
