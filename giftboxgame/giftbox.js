@@ -1,4 +1,4 @@
-// VERSION 1.4
+// VERSION 1.5
 
 let SCORE = 0,
   HEIGHT = window.innerHeight,
@@ -994,7 +994,6 @@ function createFinishScreen(lose) {
   finishScreen.style.width = '100%';
   finishScreen.style.height = '100%';
   finishScreen.style.backgroundColor = generalData.bgColor;
-  finishScreen.style.backgroundImage = "url('" + generalData.bgImg + "')";
   finishScreen.style.backgroundRepeat = 'no-repeat';
   finishScreen.style.backgroundSize = 'cover';
   finishScreen.style.backgroundPosition = 'center';
@@ -1003,6 +1002,23 @@ function createFinishScreen(lose) {
   finishScreen.style.top = '0';
   finishScreen.style.left = '0';
   finishScreen.style.zIndex = '994';
+
+  let finishScreenBlurredBG = document.createElement('DIV');
+  finishScreenBlurredBG.style.width = '100%';
+  finishScreenBlurredBG.style.height = '100%';
+  finishScreenBlurredBG.style.backgroundImage =
+    "url('" + generalData.bgImg + "')";
+  finishScreenBlurredBG.style.backgroundRepeat = 'no-repeat';
+  finishScreenBlurredBG.style.backgroundSize = 'center';
+  finishScreenBlurredBG.style.backgroundPosition = 'center';
+  finishScreenBlurredBG.style.position = 'fixed';
+  finishScreenBlurredBG.style.transition = 'all 1s';
+  finishScreenBlurredBG.style.top = '0';
+  finishScreenBlurredBG.style.left = '0';
+  finishScreenBlurredBG.style.zIndex = '1';
+  finishScreenBlurredBG.style.filter = 'blur(35px)';
+  finishScreen.appendChild(finishScreenBlurredBG);
+
 
   let container = document.createElement('DIV');
   container.id = 'rmc-finish-container';
@@ -1013,6 +1029,7 @@ function createFinishScreen(lose) {
   container.style.top = '50%';
   container.style.left = '50%';
   container.style.textAlign = 'center';
+  container.style.zIndex = '99';
 
   if (componentsData.finishScreen.img.use) {
     let img = document.createElement('img');
