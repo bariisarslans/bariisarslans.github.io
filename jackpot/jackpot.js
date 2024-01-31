@@ -167,8 +167,12 @@
                         var copyText = document.getElementById("vl-couponCode");
                         copyText.select();
                         document.execCommand("copy");
-                        alert("Kupon kodunuz kopyalanmıştır: " + copyText.value);
-                        jQuery('#vl-container, #vl-overlay').remove();
+                        // alert("Kupon kodunuz kopyalanmıştır: " + copyText.value);
+                        createMsg("Kupon kodunuz kopyalanmıştır: " + copyText.value);
+                        setTimeout(() => {
+                            jQuery('#vl-container, #vl-overlay').remove();
+                            location.href = "/"
+                        }, 2000);
                     });
                     localStorage.setItem("OM.vjp", "coupon-" + type);
                     couponForm(type);
@@ -176,10 +180,9 @@
                     status = 'lose';
                 }
             }
-            var style = '<style>#vl-overlay{z-index: 1002!important;position: fixed; left: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0, 0, 0); opacity: 0.8;}\
-				#vl-container{z-index: 1003!important;position: fixed;margin: auto;width: 700px; height: 381px;left: 0;right: 0;top: 0;bottom: 0;background-repeat: no-repeat; border: none !important;background-size: contain; background-image: url(https://img.euromsg.net/4D6D2D6846044C77B6539E65BC22E6BA/images/valentines-jackpot/vday-oyun-desktop.png);}\
-				#vl-form-close{position: absolute; top: 4px; right: 4px; width: 20px; cursor: pointer; opacity: 0.7; z-index: 1000000002;}\
-				#vl-form-close:hover{opacity: 1}\
+            var style = '<style>#vl-overlay{z-index: 1002!important;position: fixed; left: 0px; top: 0px; width: 100%; height: 100%; opacity:.95;background-color: rgb(66 40 95);}\
+				#vl-container{box-shadow: 0px 0px 20px 0px #a284ba;border-radius:10px;z-index: 1003!important;position: fixed;margin: auto;width: 700px; height: 381px;left: 0;right: 0;top: 0;bottom: 0;background-repeat: no-repeat; border: none !important;background-size: contain; background-image: url(https://img.euromsg.net/4D6D2D6846044C77B6539E65BC22E6BA/images/valentines-jackpot/vday-oyun-desktop.png);}\
+				#vl-form-close{cursor: pointer; z-index: 1000000002;}\
 				.vl-slot-container{position: absolute;top: 153px;left: 361px;}\
 				.vl-slot{border-radius: 5px;margin-right: 8px;width:70px;height:114px;float:left;background:url(https://img.euromsg.net/4D6D2D6846044C77B6539E65BC22E6BA/images/vjp_items_desktop.png) repeat-y;background-position: 0px 0px;    background-size: cover;background-color: white;}\
 				.motion .vl-slot-frame::after{content:""; filter: blur(3px);-webkit-filter: blur(3px); width: 100%; height: 100%; z-index: 0;background: inherit;position: absolute; top: 0; right: 0;}\
@@ -212,7 +215,7 @@
 					.vl-success-4{background-image: url(https://img.euromsg.net/4D6D2D6846044C77B6539E65BC22E6BA/images/valentines-jackpot/vday-oyun-kupon-4m.png) !important}\
 	            }</style>';
             var html = '<div id="vl-overlay"/><div id="vl-container">\
-				<img src="data:image/png;base64,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" id="vl-form-close"/>\
+            <button id="vl-form-close" style="position: absolute; width:auto; right: 0px; top: 0px; border: 0px; color: #a284ba; padding: 5px 10px; cursor: pointer; font-size: 29px; transition: all 1s ease 0s; border-radius: 10px; background-color: rgba(0, 0, 0, 0); z-index: 999; transform: translate3d(0px, 0px, 3px);">✖</button>\
 				<div class="vl-slot-container">\
 					<div class="vl-slot-wrapper">\
 						<div id="slot1" class="vl-slot"></div>\
@@ -226,6 +229,7 @@
             jQuery('body').append(html);
             jQuery('#vl-form-close, #vl-overlay').click(function () {
                 jQuery('#vl-container, #vl-overlay').remove();
+                location.href = "/"
             });
             a = new Slot('#slot1', 30, 1);
             b = new Slot('#slot2', 45, 2);
@@ -267,7 +271,7 @@
                     x = window.setInterval(function () {
                         if (a.speed === 0 && b.speed === 0 && c.speed === 0 && completed === 3) {
                             window.clearInterval(x);
-                            setTimeout(printResult, 1500);
+                            setTimeout(printResult, 500);
                             if (status === 'lose') enableControl();
                         }
                     }, 100);
@@ -281,6 +285,43 @@
         }
         execute();
     }
+
+
+	function createMsg(text, danger) {
+		console.log("qq");
+		randNum = (min, max) => {
+			return Math.floor(Math.random() * (max - min + 1)) + min;
+		}
+		const randId = randNum(1, 999999);
+		var msg = document.createElement("div");
+		msg.id = "vlMsg" + randId;
+		msg.innerText = text;
+		msg.style.zIndex = "1000000002";
+		msg.style.padding = "20px 25px";
+		msg.style.borderRadius = "15px";
+		msg.style.position = "fixed";
+		msg.style.verticalAlign = "middle";
+		msg.style.textAlign = "center";
+		msg.style.top = "-250px";
+		msg.style.color = "white";
+		msg.style.fontSize = "16px";
+		msg.style.background = danger ? "#fb6a78" : "#a081b9";
+		msg.style.transform = "translate(-50%, -50%)";
+		msg.style.boxShadow = "0px 0px 2px 0px "+(danger ? "#fb6a78" : "#a081b9");
+		msg.style.left = "50%";
+		msg.style.transition = "all .2s linear 0s";
+		document.body.appendChild(msg);
+		setTimeout(() => {
+			document.querySelector("#vlMsg" + randId).style.top = "5%"
+		}, 200);
+		setTimeout(() => {
+			document.querySelector("#vlMsg" + randId).style.opacity = "0"
+		}, 2700);
+		setTimeout(() => {
+			document.querySelector("#vlMsg" + randId).remove()
+		}, 3000);
+	}
+
     function exec() {
 
         // if (localStorage.getItem("OM.vjp") == undefined) {

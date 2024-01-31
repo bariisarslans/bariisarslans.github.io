@@ -1,4 +1,4 @@
-let UPDATE_PRODUCT_INTERVAL, SCORE = 0, DURATION, HEIGHT = window.innerHeight, AUDIO, EMAIL='', REPORT='';
+let UPDATE_PRODUCT_INTERVAL, SCORE = 0, DURATION, HEIGHT = window.innerHeight, AUDIO, EMAIL = '', REPORT = '';
 
 let MAIN_COMPONENT = document.createElement("DIV");
 
@@ -26,7 +26,7 @@ let generalData = {
     basketImg: 'https://app.visilabs.net/download/loreal/Game/MobilSenaryolari/materials/bag-min.png',
     sound: '',
     fontColor: 'gray',
-    fontName: 'Helvetica',
+    fontName: "Rubik One, sans-serif",
     fontFiles: [],
     closeButtonId: 'rmc-close-button',
     closeButtonColor: 'black',
@@ -44,7 +44,7 @@ let productSettings = {
     totalProductCount: 40,
     productTimeOutArray: [],
     productSize: 75,
-    turn: false
+    turn: true
 }
 
 /**
@@ -97,7 +97,7 @@ let gameSettings = {
     intersectionPoint: 70, // Intersection point (basket size or around is the ideal point) (It is not calculated automatically to avoid loss of performance)
     basketId: 'basket',
     basketSize: 150,
-    lowPowerMode: true, // If true, it does less checking, applies less visual effects
+    lowPowerMode: false, // If true, it does less checking, applies less visual effects
 }
 
 /**
@@ -133,7 +133,7 @@ let componentsData = {
         secondPermission: { // OPTIONAL
             use: false,
             id: 'rmc-second-permission-checkbox',
-            text: 'Kullanım Koşulları\'nı okudum ve kabul ediyorum.',
+            text: 'Koşulları kabul ediyorum.',
             fontSize: '15px',
             url: 'www.google.com',
         },
@@ -187,7 +187,7 @@ let componentsData = {
             id: 'rmc-scoreboard',
             fontSize: '20px',
             background: 'white',
-            fontColor: 'gray',
+            fontColor: 'white',
             type: 'roundedcorners', // square | circle | roundedcorners
             countDown: {
                 id: 'rmc-count-down',
@@ -236,21 +236,25 @@ let componentsData = {
  * Init
  */
 function initGame(responseConfig) {
-    if (utils.getMobileOperatingSystem() == 'iOS') {
-        console.log("RUN IOS");
-        iOSConfigRegulator(responseConfig)
-    }
-    else {
-        console.log("RUN ANDROID");
-        androidConfigRegulator(responseConfig);
-    }
-
+    androidConfigRegulator(responseConfig);
     config();
+    test();
+}
+
+test = () => {
+    EMAIL = "example@relateddigital.com"
+    document.querySelector("#" + componentsData.mailSubsScreen.emailInput.id).setAttribute("value", "example@relateddigital.com")
+    document.querySelector("#" + componentsData.mailSubsScreen.emailPermission.id).setAttribute("checked", "true")
+    document.querySelector("#" + componentsData.mailSubsScreen.secondPermission.id).setAttribute("checked", "true")
+    // activePageData = {
+    //     mailSubsScreen: false,
+    //     rulesScreen: false,
+    // };
 }
 
 function androidConfigRegulator(responseConfig) {
-    responseConfig = JSON.parse(responseConfig)
-    responseConfig.actiondata.ExtendedProps = JSON.parse(unescape(responseConfig.actiondata.ExtendedProps))
+    // responseConfig = JSON.parse(responseConfig)
+    // responseConfig.actiondata.ExtendedProps = JSON.parse(unescape(responseConfig.actiondata.ExtendedProps))
 
     console.log(responseConfig);
 
@@ -269,7 +273,7 @@ function androidConfigRegulator(responseConfig) {
     generalData.sound = res.game_elements.sound_url;
     utils.loadSound();
 
-    if (ext.font_family == 'custom' && utils.getMobileOperatingSystem() == 'Android') {
+    if (ext.font_family == 'custom') {
         generalData.fontName = ext.custom_font_family_android;
         generalData.fontFiles = responseConfig.fontFiles;
         console.log('font files ', generalData.fontFiles);
@@ -335,6 +339,7 @@ function androidConfigRegulator(responseConfig) {
     // Game Screen
     // componentsData.scoreboard.fontSize
     // componentsData.scoreboard.fontColor
+    generalData.fontColor = componentsData.mailSubsScreen.title.textColor
     componentsData.gameScreen.scoreboard.background = ARGBtoRGBA(ext.game_elements.scoreboard_background_color);
     componentsData.gameScreen.scoreboard.type = ext.game_elements.scoreboard_shape;
 
@@ -365,8 +370,8 @@ function androidConfigRegulator(responseConfig) {
     componentsData.finishScreen.couponCode.textColor = ARGBtoRGBA(ext.promocode_text_color);
     componentsData.finishScreen.couponCode.fontSize = fontSizeCalculator(ext.game_result_elements.text_size) + 'px';
 
-    try { REPORT = res.report.click; } 
-    catch (error) { console.log("ERROR",res.report); }
+    try { REPORT = res.report.click; }
+    catch (error) { console.log("ERROR", res.report); }
 }
 
 function iOSConfigRegulator(responseConfig) {
@@ -478,8 +483,8 @@ function iOSConfigRegulator(responseConfig) {
     componentsData.finishScreen.button.buttonColor = ARGBtoRGBA(res.copybutton_color);
     componentsData.finishScreen.button.iOSLink = res.ios_lnk;
 
-    try { REPORT = res.report.click; } 
-    catch (error) { console.log("ERROR",res.report); }
+    try { REPORT = res.report.click; }
+    catch (error) { console.log("ERROR", res.report); }
 }
 
 /**
@@ -506,7 +511,6 @@ function pageChecker() {
     }
     else {
         createGameScreen()
-        createScoreBoard()
     }
 }
 
@@ -520,8 +524,19 @@ function createMainComponents() {
     MAIN_COMPONENT.style.top = "0";
     MAIN_COMPONENT.style.left = "0";
     MAIN_COMPONENT.style.zIndex = "9999";
-    MAIN_COMPONENT.style.position = "absolute";
+    MAIN_COMPONENT.style.position = "fixed";
     document.body.appendChild(MAIN_COMPONENT);
+    createRMCCSS();
+}
+
+createRMCCSS = () => {
+    var style = document.createElement("style");
+    style.id = "RMC-GAME-STYLE";
+    style.innerHTML = "@import 'https://fonts.googleapis.com/css?family=Poiret+One';\
+    body {\
+      font-family: 'Poiret One', sans-serif;\
+    }";
+    document.head.appendChild(style);
 }
 
 /**
@@ -545,7 +560,7 @@ function createMailSubsScreen() {
 
     var container = document.createElement("DIV");
     container.id = "rmc-container";
-    container.style.width = "80%";
+    container.style.width = window.innerWidth <= 700 ? "80%" : "43%";
     container.style.height = "auto";
     container.style.position = "absolute";
     container.style.transform = "translate(-50%, -50%)";
@@ -562,6 +577,7 @@ function createMailSubsScreen() {
         title.style.width = "100%";
         title.style.margin = "15px 0";
         title.style.fontFamily = generalData.fontName;
+        // title.style.textShadow = "0px 0px 20px "+componentsData.mailSubsScreen.title.textColor;
         title.innerText = componentsData.mailSubsScreen.title.text;
         container.appendChild(title);
     }
@@ -575,6 +591,7 @@ function createMailSubsScreen() {
         message.style.width = "100%";
         message.style.margin = "15px 0";
         message.style.fontFamily = generalData.fontName;
+        // message.style.textShadow = "0px 0px 20px "+componentsData.mailSubsScreen.message.textColor;
         message.innerText = componentsData.mailSubsScreen.message.text;
         container.appendChild(message);
     }
@@ -588,6 +605,7 @@ function createMailSubsScreen() {
     input.style.width = "100%";
     input.style.padding = "9px";
     input.style.border = "1px solid " + generalData.fontColor;
+    input.style.boxShadow = "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)" ////
     input.style.borderRadius = generalData.borderRadius;
     input.style.maxWidth = "-webkit-fill-available";
     input.style.fontSize = "19px";
@@ -653,6 +671,7 @@ function createMailSubsScreen() {
     submit.style.cursor = "pointer";
     submit.style.fontWeight = "bolder";
     submit.style.fontFamily = generalData.fontName;
+    submit.style.boxShadow = "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
     submit.innerText = componentsData.mailSubsScreen.button.text;
 
     activePageData.rulesScreen && createRulesScreen();
@@ -667,7 +686,6 @@ function createMailSubsScreen() {
                     document.querySelector("#" + componentsData.mailSubsScreen.id).remove();
                     if (!activePageData.rulesScreen) {
                         createGameScreen();
-                        createScoreBoard();
                     }
                 }
             } else {
@@ -694,9 +712,9 @@ function createMailSubsScreen() {
     MAIN_COMPONENT.appendChild(mailSubsScreen);
 }
 
-function createPermitRow(inputId,desc,fontSize,fontName,url){
+function createPermitRow(inputId, desc, fontSize, fontName, url) {
     var container = document.createElement("DIV");
-    container.style.color = "black";
+    container.style.color = componentsData.mailSubsScreen.title.textColor;
     container.style.fontSize = "13px";
     container.style.margin = "15px 0";
     container.style.width = "100%";
@@ -705,23 +723,25 @@ function createPermitRow(inputId,desc,fontSize,fontName,url){
 
     var input = document.createElement("input");
     input.id = inputId;
-    input.type="checkbox";
-    input.style.width="20px";
-    input.style.height="20px";
-    input.style.display="block";
-    input.style.marginRight="7px";
-    input.style.float="left";
+    input.type = "checkbox";
+    input.style.width = "20px";
+    input.style.height = "20px";
+    input.style.display = "block";
+    input.style.marginRight = "15px";
+    input.style.float = "left";
+    input.style.transform = "scale(1.3)";
+    input.style.accentColor = componentsData.mailSubsScreen.title.textColor;
 
     var text = document.createElement("div");
-    text.innerText=desc;
-    text.style.fontSize=fontSize;
-    text.style.fontFamily=fontName;
-    text.style.textDecoration="underline";
-    text.style.color="black";
+    text.innerText = desc;
+    text.style.fontSize = fontSize;
+    text.style.fontFamily = fontName;
+    text.style.textDecoration = "underline";
+    text.style.color = componentsData.mailSubsScreen.title.textColor;
 
-    text.addEventListener('click',()=>{
+    text.addEventListener('click', () => {
         utils.linkClicked(url)
-        console.log(url,desc);
+        console.log(url, desc);
     })
 
     container.appendChild(input);
@@ -763,6 +783,7 @@ function alertChecker(text, id) {
                 document.querySelector('#' + id).innerText = ""
             } else {
                 createAlert(text, id)
+                createMsg(text,true)
             }
             break;
         case "checkboxAlert2":
@@ -770,6 +791,7 @@ function alertChecker(text, id) {
                 document.querySelector('#' + id).innerText = ""
             } else {
                 createAlert(text, id)
+                createMsg(text,true)
             }
             break;
         case "emailAlert":
@@ -777,6 +799,7 @@ function alertChecker(text, id) {
                 document.querySelector('#' + id).innerText = ""
             } else {
                 createAlert(text, id)
+                createMsg(text,true)
             }
             break;
         default:
@@ -851,6 +874,7 @@ function createCloseButton() {
     closeButton.style.padding = "5px 10px";
     closeButton.style.cursor = "pointer";
     closeButton.style.fontSize = "29px";
+    closeButton.style.transition = "1s all";
     closeButton.style.borderRadius = generalData.borderRadius;
     closeButton.style.backgroundColor = 'rgba(0,0,0,0)';
     closeButton.style.zIndex = "999";
@@ -865,6 +889,7 @@ function createCloseButton() {
         document.documentElement.style.overflow = 'auto';
         utils.pauseSound();
         console.log('Oyun Kapatıldı');
+        location.href = "/"
     });
 
     MAIN_COMPONENT.appendChild(closeButton);
@@ -943,7 +968,6 @@ function createRulesScreen() {
     submit.addEventListener("click", function () {
         document.querySelector("#" + componentsData.rulesScreen.id) ? document.querySelector("#" + componentsData.rulesScreen.id).remove() : null;
         createGameScreen();
-        createScoreBoard();
     });
 
 
@@ -970,12 +994,53 @@ function createGameScreen() {
     MAIN_COMPONENT.appendChild(gameScreen);
     console.log("oyun başladı");
 
-
     setTimeout(() => {
         createBasket();
-        startGame();
         utils.sendReport();
+        startCountDown(()=>{
+            createScoreBoard();
+            startGame();
+        });
     }, 1);
+
+}
+
+startCountDown = (cb) => {
+    const speed = 1000
+    var dashboard = document.createElement("div");
+    dashboard.id = "RMC-START-COUNTDOWN";
+    dashboard.style.position = "fixed";
+    dashboard.style.color = componentsData.gameScreen.scoreboard.background;
+    dashboard.style.textAlign = "center";
+    dashboard.style.fontFamily = "'Poiret One', sans-serif";
+    dashboard.style.textDecoration = 'none';
+    dashboard.style.transition = (speed*2)/1000+"s all";
+    dashboard.style.transform = "translate(-50%, -50%)";
+    dashboard.style.left = "50%";
+    dashboard.style.top = "50%";
+    dashboard.style.zIndex = "999999";
+
+    var _score = document.createElement("DIV");
+    _score.id = "ghostscore";
+    _score.innerText = '0x';
+    _score.style.transition = "1s all";
+    _score.style.fontSize = window.innerHeight <= 700 ? "180px" : "450px";
+
+    dashboard.appendChild(_score);
+    MAIN_COMPONENT.appendChild(dashboard);
+
+    setTimeout(() => {_score.innerText = '3';}, 1);
+    setTimeout(() => {_score.innerText = '2';}, speed);
+    setTimeout(() => {_score.innerText = '1';}, speed*2);
+    setTimeout(() => {_score.innerText = '0';}, speed*3);
+    setTimeout(() => {
+        _score.style.transform = 'scale(6)';
+        _score.style.opacity=0
+        setTimeout(() => {
+            dashboard.remove()
+        }, (speed*2));
+        cb()
+    }, speed*3.5);
 }
 
 /**
@@ -1053,8 +1118,8 @@ function createProduct(id, url) {
     div.style.left = Math.floor((Math.random() * (window.innerWidth - 100)) + 1) + 'px';
     div.style.bottom = HEIGHT + productSettings.productSize + 'px';
     div.style.position = 'fixed';
-    div.style.borderRadius = '50px';
-    !gameSettings.lowPowerMode && (div.style.background = 'green');
+    // div.style.borderRadius = '50px';
+    // !gameSettings.lowPowerMode && (div.style.background = 'green');
     div.style.backgroundRepeat = 'no-repeat';
     div.style.backgroundSize = 'contain';
     div.style.backgroundImage = "url('" + url + "')";
@@ -1077,6 +1142,15 @@ function startGame() {
     }
 
     updateProductOperation();
+}
+
+blobEffect = () => {
+    let basket = document.querySelector('#' + gameSettings.basketId)
+    basket.style.transition = ".25s transform";
+    basket.style.transform = 'scale(1.2)'
+    setTimeout(() => {
+        basket.style.transform = 'scale(1)'
+    }, 150);
 }
 
 function updateProduct(id) {
@@ -1103,6 +1177,7 @@ function updateProduct(id) {
                 catchable == 'true'
             ) {
                 SCORE++;
+                blobEffect();
 
                 document.querySelector('#' + componentsData.gameScreen.scoreboard.score.id).innerHTML = SCORE + ' PUAN';
                 console.log('SCORE:', SCORE)
@@ -1112,7 +1187,7 @@ function updateProduct(id) {
                 if (!gameSettings.lowPowerMode) {
                     catchable == 'true' && drop.setAttribute('catchable', false);
 
-                    drop.style.background = 'red';
+                    drop.style.filter = 'grayscale(100%)';
                     if (parseFloat(drop.style.bottom) < -200) {
                         drop.remove();
                     }
@@ -1158,12 +1233,23 @@ function createScoreBoard() {
     dashboard.style.background = componentsData.gameScreen.scoreboard.background;
     dashboard.style.width = "150px";
     dashboard.style.maxWidth = "150px";
+    dashboard.style.height = "70px";
     dashboard.style.margin = "5px";
     dashboard.style.backgroundSize = "contain";
     dashboard.style.left = "0";
     dashboard.style.fontSize = "24px";
     dashboard.style.transition = "1s all";
+    dashboard.style.boxShadow = "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
     componentsData.gameScreen.scoreboard.type !== 'square' && (dashboard.style.borderRadius = componentsData.gameScreen.scoreboard.type == 'circle' ? '50%' : '15px')
+
+
+    var container = document.createElement("div");
+    container.style.position = "absolute";
+    container.style.transform = "translate(-50%, -50%)";
+    container.style.top = "50%";
+    container.style.left = "50%";
+    container.style.width = "60%";
+    container.style.textAlign = "left";
 
     var _duration = document.createElement("div");
     _duration.innerHTML = DURATION;
@@ -1176,7 +1262,7 @@ function createScoreBoard() {
     _duration.style.color = componentsData.gameScreen.scoreboard.fontColor;
     _duration.style.fontFamily = generalData.fontName;
     _duration.style.fontSize = componentsData.gameScreen.scoreboard.fontSize;
-    dashboard.appendChild(_duration);
+    container.appendChild(_duration);
 
     var _score = document.createElement("DIV");
     _score.id = componentsData.gameScreen.scoreboard.score.id;
@@ -1186,7 +1272,8 @@ function createScoreBoard() {
     _score.style.fontFamily = generalData.fontName;
     _score.style.fontSize = componentsData.gameScreen.scoreboard.fontSize;
 
-    dashboard.appendChild(_score);
+    container.appendChild(_score);
+    dashboard.appendChild(container);
     document.querySelector('#' + componentsData.gameScreen.id).appendChild(dashboard);
     utils.startCountDown(document.querySelector('#' + _duration.id), DURATION);
 }
@@ -1226,7 +1313,7 @@ function createFinishScreen() {
         title.style.margin = "15px 0";
         title.style.width = 'inherit';
         title.style.fontFamily = generalData.fontName;
-        title.innerText = utils.winCheck() ? componentsData.finishScreen.title.text : componentsData.finishScreen.title.loseText;
+        title.innerText = utils.winCheck() ? componentsData.finishScreen.title.text+"\n"+SCORE + ' PUAN' : componentsData.finishScreen.title.loseText;
         container.appendChild(title);
     }
 
@@ -1245,12 +1332,13 @@ function createFinishScreen() {
 
     var _score = document.createElement("DIV");
     _score.id = 'rmc-finish-finish';
-    _score.innerHTML = SCORE + ' PUAN';
-    _score.innerHTML += '<br> ' + couponCodes[SCORE];
+    // _score.innerHTML = SCORE + ' PUAN';
+    _score.innerHTML = couponCodes[SCORE];
     _score.style.transition = "1s all";
-    _score.style.padding = componentsData.gameScreen.scoreboard.type === 'circle' ? (utils.winCheck() ? '40px 30px' : '70px 20px') : '15px 10px';
+    _score.style.padding = componentsData.gameScreen.scoreboard.type === 'circle' ? (utils.winCheck() ? '40px 30px' : '70px 20px') : '15px 25px';
     _score.style.width = 'fit-content';
     _score.style.margin = '0 auto';
+    _score.style.fontWeight = "bold";
     _score.style.color = componentsData.finishScreen.couponCode.textColor;
     _score.style.fontFamily = generalData.fontName;
     _score.style.fontSize = componentsData.finishScreen.couponCode.fontSize;
@@ -1273,6 +1361,7 @@ function createFinishScreen() {
         copyButton.style.zIndex = "3";
         copyButton.style.fontWeight = "bolder";
         copyButton.style.fontFamily = generalData.fontName;
+        copyButton.style.boxShadow = "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)";
         copyButton.innerText = componentsData.finishScreen.button.text;
 
         container.appendChild(copyButton);
@@ -1286,14 +1375,62 @@ function createFinishScreen() {
             utils.copyToClipboard(); // redirect
             utils.pauseSound();
         });
-        
-        
+
+        confettieParty();
+    } else{
+        _score.innerHTML = "0 PUAN";
+        let closeButton = document.querySelector("#"+generalData.closeButtonId)
+        closeButton.style.transform = "translate(-50%, -50%) translate3d(0px, 0px, 3px) scale(2)";
+        closeButton.style.top = "30%";
+        closeButton.style.left = "50%";
+        closeButton.style.fontFamily = generalData.fontName;
+        closeButton.innerText += "\nOyundan Çık";
     }
 
 
     finishScreen.appendChild(container);
     MAIN_COMPONENT.appendChild(finishScreen);
 }
+
+confettieParty = (sec) => {
+    startConfetti();
+    setTimeout(() => {
+        stopConfetti()
+    }, sec ? sec : 1000);
+}
+
+createMsg = (text,danger) => {
+    const randId = utils.randNum(1,999999);
+    var msg = document.createElement("div");
+    msg.id = "vlMsg"+randId;
+    msg.innerText = text;
+    msg.style.zIndex = "9999999";
+    msg.style.padding = "20px 25px";
+    msg.style.borderRadius = "15px";
+    msg.style.position = "absolute";
+    msg.style.verticalAlign = "middle";
+    msg.style.textAlign = "center";
+    msg.style.fontFamily = generalData.fontName;
+    msg.style.top = "-100px";
+    // msg.style.opacity = "0";
+    msg.style.color = "white";
+    msg.style.fontSize = componentsData.finishScreen.message.fontSize;
+    msg.style.background = danger ? "#fb6a78" : "rgb(107, 147, 189)";
+    msg.style.transform = "translate(-50%, -50%)";
+    msg.style.left = "50%";
+    msg.style.transition = "all .2s linear 0s";
+    MAIN_COMPONENT.appendChild(msg);
+  
+    setTimeout(() => {
+      document.querySelector("#vlMsg"+randId).style.top = "15%"
+    }, 200);
+    setTimeout(() => {
+      document.querySelector("#vlMsg"+randId).style.opacity = "0"
+    }, 2700);
+    setTimeout(() => {
+      document.querySelector("#vlMsg"+randId).remove()
+    }, 3000);
+  }
 
 function getAndroidLink() {
     if (componentsData.finishScreen.button.androidLink) {
@@ -1446,14 +1583,21 @@ let utils = {
     },
     copyToClipboard: () => {
         console.log("NATIVE COPYCLIPBORD");
-        if (window.Android) {
-            Android.copyToClipboard(couponCodes[SCORE], getAndroidLink())
-        } else if (window.webkit.messageHandlers.eventHandler) {
-            window.webkit.messageHandlers.eventHandler.postMessage({
-                method: "copyToClipboard",
-                couponCode: couponCodes[SCORE],
-                url:getIOSLink()
-            })
+        navigator.clipboard.writeText(couponCodes[SCORE]);
+        document.querySelector("#"+componentsData.finishScreen.button.id).innerText = "Kopyalandı";
+        confettieParty();
+        createMsg("Başarılı şekilde kopyalandı",false)
+        try {
+            if (window.Android) {
+                Android.copyToClipboard(couponCodes[SCORE], getAndroidLink())
+            } else if (window.webkit.messageHandlers.eventHandler) {
+                window.webkit.messageHandlers.eventHandler.postMessage({
+                    method: "copyToClipboard",
+                    couponCode: couponCodes[SCORE],
+                    url: getIOSLink()
+                })
+            }
+        } catch (error) {
         }
     },
     sendReport: () => {
@@ -1505,7 +1649,7 @@ let utils = {
     },
     linkClicked: (url) => {
         if (window.Android) {
-            location.href=url ? url : ""
+            location.href = url ? url : ""
         } else if (window.webkit && window.webkit.messageHandlers) {
             window.webkit.messageHandlers.eventHandler.postMessage({
                 method: "linkClicked",
@@ -1686,3 +1830,140 @@ function timeOuts(minDiff, maxDiff) {
         productSettings.productTimeOutArray.push(timeOut)
     }
 }
+
+
+/**
+ * Confettie.js
+ */
+
+
+ var maxParticleCount = 150; //set max confetti count
+ var particleSpeed = 2; //set the particle animation speed
+ var startConfetti; //call to start confetti animation
+ var stopConfetti; //call to stop adding confetti
+ var toggleConfetti; //call to start or stop the confetti animation depending on whether it's already running
+ var removeConfetti; //call to stop the confetti animation and remove all confetti immediately
+ 
+ (function() {
+   startConfetti = startConfettiInner;
+   stopConfetti = stopConfettiInner;
+   toggleConfetti = toggleConfettiInner;
+   removeConfetti = removeConfettiInner;
+   var colors = ["DodgerBlue", "OliveDrab", "Gold", "Pink", "SlateBlue", "LightBlue", "Violet", "PaleGreen", "SteelBlue", "SandyBrown", "Chocolate", "Crimson"]
+   var streamingConfetti = false;
+   var animationTimer = null;
+   var particles = [];
+   var waveAngle = 0;
+   
+   function resetParticle(particle, width, height) {
+     particle.color = colors[(Math.random() * colors.length) | 0];
+     particle.x = Math.random() * width;
+     particle.y = Math.random() * height - height;
+     particle.diameter = Math.random() * 10 + 5;
+     particle.tilt = Math.random() * 10 - 10;
+     particle.tiltAngleIncrement = Math.random() * 0.07 + 0.05;
+     particle.tiltAngle = 0;
+     return particle;
+   }
+ 
+   function startConfettiInner() {
+     var width = window.innerWidth;
+     var height = window.innerHeight;
+     window.requestAnimFrame = (function() {
+       return window.requestAnimationFrame ||
+         window.webkitRequestAnimationFrame ||
+         window.mozRequestAnimationFrame ||
+         window.oRequestAnimationFrame ||
+         window.msRequestAnimationFrame ||
+         function (callback) {
+           return window.setTimeout(callback, 16.6666667);
+         };
+     })();
+     var canvas = document.getElementById("confetti-canvas");
+     if (canvas === null) {
+       canvas = document.createElement("canvas");
+       canvas.setAttribute("id", "confetti-canvas");
+       canvas.setAttribute("style", "display:block;z-index:999999;pointer-events:none;position:fixed;top:0px");
+       MAIN_COMPONENT.appendChild(canvas);
+       canvas.width = width;
+       canvas.height = height;
+       window.addEventListener("resize", function() {
+         canvas.width = window.innerWidth;
+         canvas.height = window.innerHeight;
+       }, true);
+     }
+     var context = canvas.getContext("2d");
+     while (particles.length < maxParticleCount)
+       particles.push(resetParticle({}, width, height));
+     streamingConfetti = true;
+     if (animationTimer === null) {
+       (function runAnimation() {
+         context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+         if (particles.length === 0)
+           animationTimer = null;
+         else {
+           updateParticles();
+           drawParticles(context);
+           animationTimer = requestAnimFrame(runAnimation);
+         }
+       })();
+     }
+   }
+ 
+   function stopConfettiInner() {
+     streamingConfetti = false;
+   }
+ 
+   function removeConfettiInner() {
+     stopConfetti();
+     particles = [];
+   }
+ 
+   function toggleConfettiInner() {
+     if (streamingConfetti)
+       stopConfettiInner();
+     else
+       startConfettiInner();
+   }
+ 
+   function drawParticles(context) {
+     var particle;
+     var x;
+     for (var i = 0; i < particles.length; i++) {
+       particle = particles[i];
+       context.beginPath();
+       context.lineWidth = particle.diameter;
+       context.strokeStyle = particle.color;
+       x = particle.x + particle.tilt;
+       context.moveTo(x + particle.diameter / 2, particle.y);
+       context.lineTo(x, particle.y + particle.tilt + particle.diameter / 2);
+       context.stroke();
+     }
+   }
+ 
+   function updateParticles() {
+     var width = window.innerWidth;
+     var height = window.innerHeight;
+     var particle;
+     waveAngle += 0.01;
+     for (var i = 0; i < particles.length; i++) {
+       particle = particles[i];
+       if (!streamingConfetti && particle.y < -15)
+         particle.y = height + 100;
+       else {
+         particle.tiltAngle += particle.tiltAngleIncrement;
+         particle.x += Math.sin(waveAngle);
+         particle.y += (Math.cos(waveAngle) + particle.diameter + particleSpeed) * 0.5;
+         particle.tilt = Math.sin(particle.tiltAngle) * 15;
+       }
+       if (particle.x > width + 20 || particle.x < -20 || particle.y > height) {
+         if (streamingConfetti && particles.length <= maxParticleCount)
+           resetParticle(particle, width, height);
+         else {
+           particles.splice(i, 1);
+           i--;
+         }
+       }
+     }
+   }
+ })();

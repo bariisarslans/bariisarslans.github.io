@@ -1,6 +1,4 @@
-// VERSION 1.0
-
-let UPDATE_PRODUCT_INTERVAL, SCORE = 0, DURATION, HEIGHT = window.innerHeight, WIDTH = window.innerWidth, PAIR_COUNTER = 0, LAST_CLICKED_CARD_ID = null, PAIR_COUNT = 0, MAX_PAIR_COUNT = 0, CLICKABLE = true, CLICKABLE_DURATION = 1000, PAIRS = [], AUDIO, TIME_INTERVAL, EMAIL='', REPORT='';
+let UPDATE_PRODUCT_INTERVAL, SCORE = 10, DURATION, HEIGHT = window.innerHeight, WIDTH = window.innerWidth, PAIR_COUNTER = 0, LAST_CLICKED_CARD_ID = null, PAIR_COUNT = 0, MAX_PAIR_COUNT = 0, CLICKABLE = true, CLICKABLE_DURATION = 1000, PAIRS = [], AUDIO, TIME_INTERVAL, EMAIL='', REPORT='';
 
 let MAIN_COMPONENT = document.createElement("DIV");
 
@@ -11,7 +9,6 @@ let screens = {
     game: 3,
     finish: 4
 };
-
 
 let activePageData = {
     mailSubsScreen: false,
@@ -106,9 +103,9 @@ let componentsData = {
             use: true,
             id: 'rmc-rules-button',
             text: '',
-            textColor: '',
+            textColor: 'white',
             buttonColor: '',
-            fontSize: '',
+            fontSize: '28',
             goScreen: screens.game,
         },
     },
@@ -118,9 +115,9 @@ let componentsData = {
         cards: [],
         scoreboard: {
             id: 'rmc-scoreboard',
-            fontSize: '',
+            fontSize: '20px',
             background: '',
-            fontColor: '',
+            fontColor: 'white',
             type: 'round', // square | circle | round
             position: 'topLeft', // topLeft | topRight | bottomLeft | bottomRight
             countDown: {
@@ -158,7 +155,7 @@ let componentsData = {
             buttonLabel: '',
             loseAndroidLink: '',
             loseIOSLink: '',
-            loseButtonColor: '',
+            loseButtonColor: '#383636',
             loseButtonTextSize: '',
             loseButtonTextColor: ''
         },
@@ -171,7 +168,7 @@ let componentsData = {
             use: true,
             id: 'rmc-finish-button',
             text: '',
-            textColor: '',
+            textColor: 'white',
             buttonColor: '',
             fontSize: '',
             androidLink: '',
@@ -184,11 +181,11 @@ let componentsData = {
  * Card settings
  */
 let cardSettings = {
-    cardWidth: 150,
-    cardHeight: 300,
+    cardWidth: 100,
+    cardHeight: 100,
     cardMargin: 10,
     cardIdPrefix: 'item',
-    duration: 500,
+    duration: 300,
     backfaceImg: 'https://picsum.photos/id/29/300/600',
     backfaceColor: 'green',
     emptyBackfaceImg: '',
@@ -202,7 +199,8 @@ let cardSettings = {
 */
 let gameSettings = {
     duration: 6,
-    gameAreaHeight: HEIGHT * 0.7,
+    gameAreaHeight: window.innerWidth <= 600 ? HEIGHT*.5 : HEIGHT * 0.7,
+    gameAreaWidth: window.innerWidth <= 600 ? WIDTH*.9 :  WIDTH * 0.5,
     matchedIconEnable: false,
     gameScreenSecondScoreEnable: false
 }
@@ -229,6 +227,18 @@ function initFindToWinGameIOS(responseConfig) {
     console.log("INIT IOS GAME");
     iOSConfigRegulator(responseConfig)
     config();
+    test();
+}
+
+test = () => {
+    EMAIL = "example@relateddigital.com"
+    document.querySelector("#" + componentsData.mailSubsScreen.emailInput.id).setAttribute("value", "example@relateddigital.com")
+    document.querySelector("#" + componentsData.mailSubsScreen.emailPermission.id).setAttribute("checked", "true")
+    document.querySelector("#" + componentsData.mailSubsScreen.secondPermission.id).setAttribute("checked", "true")
+    // activePageData = {
+    //     mailSubsScreen: false,
+    //     rulesScreen: false,
+    // };
 }
 
 function androidConfigRegulator(responseConfig) {
@@ -488,7 +498,7 @@ function iOSConfigRegulator(responseConfig) {
 
     componentsData.finishScreen.couponCode.background = ARGBtoRGBA(res.promocode_background_color);
     componentsData.finishScreen.couponCode.textColor = ARGBtoRGBA(res.promocode_text_color);
-    componentsData.finishScreen.couponCode.fontSize = fontSizeCalculator(res.gameResultElementsExtended.textSize) + 'px'; /////
+    componentsData.finishScreen.couponCode.fontSize = fontSizeCalculator(res.gameResultElementsExtended.textSize) + 'px';
 
     try { REPORT = res.report.click; } 
     catch (error) { console.log("ERROR",res.report); }
@@ -507,7 +517,6 @@ function pageChecker() {
     }
     else {
         createGameScreen()
-        createScoreBoard()
     }
 }
 
@@ -521,14 +530,24 @@ function createMainComponents() {
     MAIN_COMPONENT.style.top = "0";
     MAIN_COMPONENT.style.left = "0";
     MAIN_COMPONENT.style.zIndex = "9999";
-    MAIN_COMPONENT.style.position = "absolute";
+    MAIN_COMPONENT.style.position = "fixed";
     document.body.appendChild(MAIN_COMPONENT);
+    createRMCCSS();
+}
+
+createRMCCSS = () => {
+    var style = document.createElement("style");
+    style.id = "RMC-GAME-STYLE";
+    style.innerHTML = "@import 'https://fonts.googleapis.com/css?family=Poiret+One';\
+    body {\
+      font-family: 'Poiret One', sans-serif;\
+    }";
+    document.head.appendChild(style);
 }
 
 /**
  * Mail subscribe form screen
  */
-
 function createMailSubsScreen() {
     var mailSubsScreen = document.createElement("DIV");
     mailSubsScreen.id = componentsData.mailSubsScreen.id;
@@ -547,7 +566,7 @@ function createMailSubsScreen() {
 
     var container = document.createElement("DIV");
     container.id = "rmc-container";
-    container.style.width = "80%";
+    container.style.width = window.innerWidth <= 700 ? "80%" : "43%";
     container.style.height = "auto";
     container.style.position = "absolute";
     container.style.transform = "translate(-50%, -50%)";
@@ -564,6 +583,7 @@ function createMailSubsScreen() {
         title.style.width = "100%";
         title.style.margin = "15px 0";
         title.style.fontFamily = generalData.fontName;
+        // title.style.textShadow = "0px 0px 20px "+componentsData.mailSubsScreen.title.textColor;
         title.innerText = componentsData.mailSubsScreen.title.text;
         container.appendChild(title);
     }
@@ -577,6 +597,7 @@ function createMailSubsScreen() {
         message.style.width = "100%";
         message.style.margin = "15px 0";
         message.style.fontFamily = generalData.fontName;
+        // message.style.textShadow = "0px 0px 20px "+componentsData.mailSubsScreen.message.textColor;
         message.innerText = componentsData.mailSubsScreen.message.text;
         container.appendChild(message);
     }
@@ -589,13 +610,14 @@ function createMailSubsScreen() {
     input.style.backgroundColor = "white";
     input.style.width = "100%";
     input.style.padding = "9px";
-    input.style.border = "1px solid " + generalData.fontColor;
+    input.style.border = "1px solid " + componentsData.mailSubsScreen.title.textColor;
+    input.style.boxShadow = "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)" ////
     input.style.borderRadius = generalData.borderRadius;
     input.style.maxWidth = "-webkit-fill-available";
     input.style.fontSize = "19px";
     input.style.fontWeight = "bold";
     input.style.margin = "15px 0";
-    input.style.color = generalData.fontColor;
+    input.style.color = componentsData.mailSubsScreen.title.textColor;
     input.style.marginBottom = "12px";
     input.style.display = "inline-block";
     input.style.fontFamily = generalData.fontName;
@@ -604,6 +626,8 @@ function createMailSubsScreen() {
     var emailAlert = document.createElement("div");
     emailAlert.id = 'emailAlert';
     container.appendChild(emailAlert);
+
+
 
     if (componentsData.mailSubsScreen.emailPermission.use) {
         var emailPermission = createPermitRow(
@@ -653,6 +677,7 @@ function createMailSubsScreen() {
     submit.style.cursor = "pointer";
     submit.style.fontWeight = "bolder";
     submit.style.fontFamily = generalData.fontName;
+    submit.style.boxShadow = "rgb(255 255 255) 0px 0px 20px 9px"
     submit.innerText = componentsData.mailSubsScreen.button.text;
 
     activePageData.rulesScreen && createRulesScreen();
@@ -667,7 +692,6 @@ function createMailSubsScreen() {
                     document.querySelector("#" + componentsData.mailSubsScreen.id).remove();
                     if (!activePageData.rulesScreen) {
                         createGameScreen();
-                        createScoreBoard();
                     }
                 }
             } else {
@@ -694,9 +718,9 @@ function createMailSubsScreen() {
     MAIN_COMPONENT.appendChild(mailSubsScreen);
 }
 
-function createPermitRow(inputId,desc,fontSize,fontName,url){
+function createPermitRow(inputId, desc, fontSize, fontName, url) {
     var container = document.createElement("DIV");
-    container.style.color = "black";
+    container.style.color = componentsData.mailSubsScreen.title.textColor;
     container.style.fontSize = "13px";
     container.style.margin = "15px 0";
     container.style.width = "100%";
@@ -705,23 +729,25 @@ function createPermitRow(inputId,desc,fontSize,fontName,url){
 
     var input = document.createElement("input");
     input.id = inputId;
-    input.type="checkbox";
-    input.style.width="20px";
-    input.style.height="20px";
-    input.style.display="block";
-    input.style.marginRight="7px";
-    input.style.float="left";
+    input.type = "checkbox";
+    input.style.width = "20px";
+    input.style.height = "20px";
+    input.style.display = "block";
+    input.style.marginRight = "15px";
+    input.style.float = "left";
+    input.style.transform = "scale(1.3)";
+    input.style.accentColor = componentsData.mailSubsScreen.title.textColor;
 
     var text = document.createElement("div");
-    text.innerText=desc;
-    text.style.fontSize=fontSize;
-    text.style.fontFamily=fontName;
-    text.style.textDecoration="underline";
-    text.style.color="black";
+    text.innerText = desc;
+    text.style.fontSize = fontSize;
+    text.style.fontFamily = fontName;
+    text.style.textDecoration = "underline";
+    text.style.color = componentsData.mailSubsScreen.title.textColor;
 
-    text.addEventListener('click',()=>{
+    text.addEventListener('click', () => {
         utils.linkClicked(url)
-        console.log(url,desc);
+        console.log(url, desc);
     })
 
     container.appendChild(input);
@@ -847,6 +873,7 @@ function createCloseButton() {
     closeButton.style.padding = "5px 10px";
     closeButton.style.cursor = "pointer";
     closeButton.style.fontSize = "29px";
+    closeButton.style.transition = "1s all";
     closeButton.style.borderRadius = generalData.borderRadius;
     closeButton.style.backgroundColor = 'rgba(0,0,0,0)';
     closeButton.style.zIndex = "999";
@@ -865,6 +892,7 @@ function createCloseButton() {
         document.documentElement.style.overflow = 'auto';
         utils.pauseSound();
         console.log('Oyun Kapatıldı');
+        location.href = "/"
     });
 
     MAIN_COMPONENT.appendChild(closeButton);
@@ -942,7 +970,6 @@ function createRulesScreen() {
     submit.addEventListener("click", function () {
         document.querySelector("#" + componentsData.rulesScreen.id) ? document.querySelector("#" + componentsData.rulesScreen.id).remove() : null;
         createGameScreen();
-        createScoreBoard();
     });
 
 
@@ -969,8 +996,8 @@ function createGameScreen() {
 
     var gameArea = document.createElement("DIV");
     gameArea.id = componentsData.gameScreen.gameArea;
-    gameArea.style.width = "100%";
-    gameArea.style.height = gameSettings.gameAreaHeight;
+    gameArea.style.width = gameSettings.gameAreaWidth+"px";
+    gameArea.style.height = gameSettings.gameAreaHeight+"px";
     gameArea.style.position = "absolute";
     gameArea.style.transform = "translate(-50%, -50%)";
     gameArea.style.top = "50%";
@@ -984,6 +1011,7 @@ function createGameScreen() {
     console.log("oyun başladı");
 
     setTimeout(() => {
+        createScoreBoard();
         startGame();
         utils.sendReport();
     }, 1);
@@ -1002,13 +1030,15 @@ function createCard(data, i) {
     card.style.zIndex = '99';
     card.style.overflow = 'hidden';
     card.style.display = 'inline-block';
+    card.style.position = 'relative';
 
     let front = document.createElement('div');
     front.style.width = card.style.width;
     front.style.height = card.style.height;
     front.style.overflow = 'hidden';
     front.style.backgroundRepeat = 'no-repeat';
-    front.style.backgroundSize = 'cover';
+    front.style.backgroundSize = 'contain';
+    front.style.backgroundPosition = 'center';
     front.style.backgroundImage = "url('" + data.imgUrl + "')";
     front.style.transformStyle = 'preserve-3d';
     front.style.transition = 'all ' + cardSettings.duration + 'ms cubic-bezier(1, 0.99, 0, -0.02) 0s';
@@ -1030,6 +1060,7 @@ function createCard(data, i) {
     back.style.position = 'absolute';
     back.style.backfaceVisibility = 'hidden';
     back.style.borderRadius = '10px';
+    back.style.boxShadow = "5px 2px 20px 0 rgb(46 61 73 / 50%)"
 
 
     if (data.empty) {
@@ -1169,14 +1200,19 @@ function clickableController() {
 }
 
 function addPairIcon(id) {
+    let card = document.querySelector("#" + id)
     var icon = document.createElement("div");
-    icon.innerText = "MATCHED " + SCORE;
-    icon.style.backgroundColor = 'green';
-    icon.style.position = 'relative';
+    icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="green" d="M256 512c141.4 0 256-114.6 256-256S397.4 0 256 0S0 114.6 0 256S114.6 512 256 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/></svg>'
+    icon.style.backgroundColor = 'white';
+    icon.style.position = 'absolute';
     icon.style.color = '#fff';
-    icon.style.borderTopLeftRadius = '10px';
-    icon.style.borderTopRightRadius = '10px';
-    document.querySelector("#" + id).appendChild(icon)
+    icon.style.width = '25px';
+    icon.style.height = '25px';
+    icon.style.borderRadius = '25px';
+    icon.style.bottom = '10px';
+    icon.style.right = '10px';
+    // card.appendChild(icon)
+    card.style.background = "green"
 }
 
 function open(cardId, data) {
@@ -1220,7 +1256,7 @@ function startGame() {
 function createScoreBoard() {
     var dashboard = document.createElement("div");
     dashboard.id = componentsData.gameScreen.scoreboard.id;
-    dashboard.style.padding = componentsData.gameScreen.scoreboard.type === 'circle' ? '40px 0px' : '10px 0px';
+    dashboard.style.padding = componentsData.gameScreen.scoreboard.type === 'circle' ? '45px 0px' : '45px 0px';
     dashboard.style.position = "fixed";
     dashboard.style.color = "white";
     dashboard.style.textAlign = "center";
@@ -1231,22 +1267,33 @@ function createScoreBoard() {
     dashboard.style.backgroundSize = "contain";
     dashboard.style.fontSize = "24px";
     dashboard.style.transition = "1s all";
+    dashboard.style.boxShadow = "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
     dashboard = scoreboardPositionChanger(dashboard, componentsData.gameScreen.scoreboard.position);
     componentsData.gameScreen.scoreboard.type !== 'square' && (dashboard.style.borderRadius = componentsData.gameScreen.scoreboard.type == 'circle' ? '50%' : '15px')
+
+    var container = document.createElement("div");
+    container.style.position = "absolute";
+    container.style.transform = "translate(-50%, -50%)";
+    container.style.top = "50%";
+    container.style.left = "50%";
+    container.style.width = "60%";
+    container.style.textAlign = "left";
 
     var _duration = document.createElement("div");
     _duration.innerHTML = gameSettings.duration;
     _duration.id = componentsData.gameScreen.scoreboard.countDown.id;
     _duration.style.fontWeight = "bold";
-    _duration.style.marginBottom = gameSettings.gameScreenSecondScoreEnable ? "10px" : "0px";
+    _duration.style.marginBottom = "10px";
     _duration.style.transition = "1s all";
     _duration.style.width = "150px";
     _duration.style.maxWidth = "150px";
     _duration.style.color = componentsData.gameScreen.scoreboard.fontColor;
     _duration.style.fontFamily = generalData.fontName;
     _duration.style.fontSize = componentsData.gameScreen.scoreboard.fontSize;
-    dashboard.appendChild(_duration);
 
+    container.appendChild(_duration);
+
+    dashboard.appendChild(container);
     if (gameSettings.gameScreenSecondScoreEnable) {
         var _score = document.createElement("DIV");
         _score.id = componentsData.gameScreen.scoreboard.score.id;
@@ -1324,7 +1371,7 @@ function createFinishScreen(lose) {
             title.style.margin = "15px 0";
             title.style.width = 'inherit';
             title.style.fontFamily = generalData.fontName;
-            title.innerText = utils.winCheck() ? componentsData.finishScreen.title.text : componentsData.finishScreen.title.loseText;
+            title.innerText = utils.winCheck() ? componentsData.finishScreen.title.text+"\n"+SCORE + " SANİYEDE ÇÖZDÜNÜZ" : componentsData.finishScreen.title.loseText;
             container.appendChild(title);
         }
         if (componentsData.finishScreen.message.use) {
@@ -1345,11 +1392,11 @@ function createFinishScreen(lose) {
         _score.style.transition = "1s all";
         _score.style.padding = componentsData.gameScreen.scoreboard.type === 'circle' ? (utils.winCheck() ? '40px 30px' : '70px 20px') : '15px 10px';
         _score.style.width = 'fit-content';
-        _score.style.margin = '0 auto'; ///// breakpoint
-        _score.style.color = componentsData.finishScreen.couponCode.textColor;
+        _score.style.margin = '0 auto';
+        _score.style.color = componentsData.gameScreen.scoreboard.fontColor;
         _score.style.fontFamily = generalData.fontName;
-        _score.style.fontSize = componentsData.finishScreen.couponCode.fontSize;
-        _score.style.background = componentsData.finishScreen.couponCode.background;
+        _score.style.fontSize = componentsData.gameScreen.scoreboard.fontSize;
+        _score.style.background = componentsData.gameScreen.scoreboard.background;
         componentsData.gameScreen.scoreboard.type !== 'square' && (_score.style.borderRadius = componentsData.gameScreen.scoreboard.type == 'circle' ? '50%' : '15px');
         container.appendChild(_score);
 
@@ -1357,37 +1404,47 @@ function createFinishScreen(lose) {
             utils.copyToClipboard(lose);
             utils.pauseSound();
         });
+
+        confettieParty();
     }
     else {
-        var img = document.createElement("img");
-        img.id = componentsData.finishScreen.lose.id;
-        img.src = componentsData.finishScreen.lose.src
-        img.style.display = "inline-block";
-        img.style.margin = "15px 0";
-        img.style.width = 'inherit';
-        container.appendChild(img);
+        // var img = document.createElement("img");
+        // img.id = componentsData.finishScreen.lose.id;
+        // img.src = componentsData.finishScreen.lose.src
+        // img.style.display = "inline-block";
+        // img.style.margin = "15px 0";
+        // img.style.width = 'inherit';
+
+        let closeButton = document.querySelector("#"+generalData.closeButtonId)
+        closeButton.style.transform = "translate(-50%, -50%) translate3d(0px, 0px, 3px) scale(2)";
+        closeButton.style.top = "30%";
+        closeButton.style.left = "50%";
+        closeButton.style.fontFamily = generalData.fontName;
+        closeButton.innerText += "\nOyundan Çık";
+        // container.appendChild(img);
     }
 
     var copyButton = document.createElement("div");
     copyButton.id = componentsData.finishScreen.button.id;
     copyButton.style.backgroundColor = lose ? componentsData.finishScreen.lose.loseButtonColor : componentsData.finishScreen.button.buttonColor;
-    copyButton.style.color = lose ? componentsData.finishScreen.lose.loseButtonTextColor : componentsData.finishScreen.button.textColor;
+    copyButton.style.color = lose ? componentsData.finishScreen.button.textColor : componentsData.finishScreen.button.textColor;
     copyButton.style.padding = "15px 30px";
     copyButton.style.fontSize = lose ? componentsData.finishScreen.lose.loseButtonTextSize : componentsData.finishScreen.button.fontSize;
     copyButton.style.borderRadius = generalData.borderRadius;
-    copyButton.style.position = "absolute";
-    copyButton.style.bottom = "70px";
-    copyButton.style.left = "50%";
-    copyButton.style.transform = "translate(-50%, 0%) translate3d(0,0,3px)";
+    // copyButton.style.position = "absolute";
+    // copyButton.style.bottom = "70px";
+    // copyButton.style.left = "50%";
+    // copyButton.style.transform = "translate(-50%, 0%) translate3d(0,0,3px)";
     copyButton.style.width = "fit-content";
     copyButton.style.margin = "10px auto";
     copyButton.style.cursor = "pointer";
     copyButton.style.zIndex = "3";
     copyButton.style.fontWeight = "bolder";
     copyButton.style.fontFamily = generalData.fontName;
+    copyButton.style.boxShadow = "0px 0px 10px 0px "+(lose ? componentsData.finishScreen.lose.loseButtonColor : componentsData.finishScreen.button.buttonColor)
     copyButton.innerText = lose ? componentsData.finishScreen.lose.buttonLabel : componentsData.finishScreen.button.text;
 
-    finishScreen.appendChild(copyButton);
+    container.appendChild(copyButton);
 
     if (!lose) {utils.saveCodeGotten()}
 
@@ -1581,11 +1638,14 @@ let utils = {
     cardSizeCalculate: () => {
         const rowItemCount = componentsData.gameScreen.cards[0].length;
         const colmItemCount = componentsData.gameScreen.cards.length;
-        const w = (WIDTH - (rowItemCount * (cardSettings.cardMargin * 2))) / rowItemCount;
+        const w = (gameSettings.gameAreaWidth - (rowItemCount * (cardSettings.cardMargin * 2))) / rowItemCount;
         const h = (gameSettings.gameAreaHeight - (colmItemCount * (cardSettings.cardMargin * 2))) / colmItemCount;
 
         cardSettings.cardWidth = w;
         cardSettings.cardHeight = h;
+        console.log("gameSettings.gameAreaWidth",gameSettings.gameAreaWidth);
+        console.log("gameSettings.gameAreaHeight",gameSettings.gameAreaHeight);
+        console.log("w",w,"h",h);
     },
     startCountDown: (elem, seconds) => {
         var that = {};
@@ -1757,26 +1817,26 @@ let utils = {
         }
     },
     loadSound: () => {
-        AUDIO = document.createElement("audio")
-        AUDIO.src = generalData.sound;
-        AUDIO.currentTime = 0;
-        AUDIO.setAttribute("playsinline", true);
-        AUDIO.setAttribute("preload", "auto");
-        AUDIO.setAttribute("loop", true);
-        AUDIO.setAttribute("autoplay", true);
-        document.querySelector('head').appendChild(AUDIO);
-        try {
-            if (utils.getBrowser() == 'Safari') {
-                let html = document.querySelector('html');
-                html.addEventListener('touchstart', () => { AUDIO.play(); html.removeEventListener('touchstart', () => { }) })
-                html.addEventListener('click', () => { AUDIO.play(); html.removeEventListener('click', () => { }) })
-            }
-            else {
-                AUDIO.play();
-            }
-        } catch (error) {
-            console.log("loadSound error", error);
-        }
+        // AUDIO = document.createElement("audio")
+        // AUDIO.src = generalData.sound;
+        // AUDIO.currentTime = 0;
+        // AUDIO.setAttribute("playsinline", true);
+        // AUDIO.setAttribute("preload", "auto");
+        // AUDIO.setAttribute("loop", true);
+        // AUDIO.setAttribute("autoplay", true);
+        // document.querySelector('head').appendChild(AUDIO);
+        // try {
+        //     if (utils.getBrowser() == 'Safari') {
+        //         let html = document.querySelector('html');
+        //         html.addEventListener('touchstart', () => { AUDIO.play(); html.removeEventListener('touchstart', () => { }) })
+        //         html.addEventListener('click', () => { AUDIO.play(); html.removeEventListener('click', () => { }) })
+        //     }
+        //     else {
+        //         AUDIO.play();
+        //     }
+        // } catch (error) {
+        //     console.log("loadSound error", error);
+        // }
     },
     pauseSound: () => {
         try {
@@ -1802,3 +1862,273 @@ function config() {
     pageChecker();
     createCloseButton();
 }
+
+
+
+/**
+ * Confettie.js
+ */
+
+
+confettieParty = (sec) => {
+    startConfetti();
+    setTimeout(() => {
+        stopConfetti()
+    }, sec ? sec : 1000);
+}
+
+var maxParticleCount = 150; //set max confetti count
+var particleSpeed = 2; //set the particle animation speed
+var startConfetti; //call to start confetti animation
+var stopConfetti; //call to stop adding confetti
+var toggleConfetti; //call to start or stop the confetti animation depending on whether it's already running
+var removeConfetti; //call to stop the confetti animation and remove all confetti immediately
+
+(function() {
+  startConfetti = startConfettiInner;
+  stopConfetti = stopConfettiInner;
+  toggleConfetti = toggleConfettiInner;
+  removeConfetti = removeConfettiInner;
+  var colors = ["DodgerBlue", "OliveDrab", "Gold", "Pink", "SlateBlue", "LightBlue", "Violet", "PaleGreen", "SteelBlue", "SandyBrown", "Chocolate", "Crimson"]
+  var streamingConfetti = false;
+  var animationTimer = null;
+  var particles = [];
+  var waveAngle = 0;
+  
+  function resetParticle(particle, width, height) {
+    particle.color = colors[(Math.random() * colors.length) | 0];
+    particle.x = Math.random() * width;
+    particle.y = Math.random() * height - height;
+    particle.diameter = Math.random() * 10 + 5;
+    particle.tilt = Math.random() * 10 - 10;
+    particle.tiltAngleIncrement = Math.random() * 0.07 + 0.05;
+    particle.tiltAngle = 0;
+    return particle;
+  }
+
+  function startConfettiInner() {
+    var width = window.innerWidth;
+    var height = window.innerHeight;
+    window.requestAnimFrame = (function() {
+      return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function (callback) {
+          return window.setTimeout(callback, 16.6666667);
+        };
+    })();
+    var canvas = document.getElementById("confetti-canvas");
+    if (canvas === null) {
+      canvas = document.createElement("canvas");
+      canvas.setAttribute("id", "confetti-canvas");
+      canvas.setAttribute("style", "display:block;z-index:999999;pointer-events:none;position:fixed;top:0px");
+      MAIN_COMPONENT.appendChild(canvas);
+      canvas.width = width;
+      canvas.height = height;
+      window.addEventListener("resize", function() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }, true);
+    }
+    var context = canvas.getContext("2d");
+    while (particles.length < maxParticleCount)
+      particles.push(resetParticle({}, width, height));
+    streamingConfetti = true;
+    if (animationTimer === null) {
+      (function runAnimation() {
+        context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        if (particles.length === 0)
+          animationTimer = null;
+        else {
+          updateParticles();
+          drawParticles(context);
+          animationTimer = requestAnimFrame(runAnimation);
+        }
+      })();
+    }
+  }
+
+  function stopConfettiInner() {
+    streamingConfetti = false;
+  }
+
+  function removeConfettiInner() {
+    stopConfetti();
+    particles = [];
+  }
+
+  function toggleConfettiInner() {
+    if (streamingConfetti)
+      stopConfettiInner();
+    else
+      startConfettiInner();
+  }
+
+  function drawParticles(context) {
+    var particle;
+    var x;
+    for (var i = 0; i < particles.length; i++) {
+      particle = particles[i];
+      context.beginPath();
+      context.lineWidth = particle.diameter;
+      context.strokeStyle = particle.color;
+      x = particle.x + particle.tilt;
+      context.moveTo(x + particle.diameter / 2, particle.y);
+      context.lineTo(x, particle.y + particle.tilt + particle.diameter / 2);
+      context.stroke();
+    }
+  }
+
+  function updateParticles() {
+    var width = window.innerWidth;
+    var height = window.innerHeight;
+    var particle;
+    waveAngle += 0.01;
+    for (var i = 0; i < particles.length; i++) {
+      particle = particles[i];
+      if (!streamingConfetti && particle.y < -15)
+        particle.y = height + 100;
+      else {
+        particle.tiltAngle += particle.tiltAngleIncrement;
+        particle.x += Math.sin(waveAngle);
+        particle.y += (Math.cos(waveAngle) + particle.diameter + particleSpeed) * 0.5;
+        particle.tilt = Math.sin(particle.tiltAngle) * 15;
+      }
+      if (particle.x > width + 20 || particle.x < -20 || particle.y > height) {
+        if (streamingConfetti && particles.length <= maxParticleCount)
+          resetParticle(particle, width, height);
+        else {
+          particles.splice(i, 1);
+          i--;
+        }
+      }
+    }
+  }
+})();
+
+
+// Run Game
+let responseConfig = {
+    // "gamificationRules": {
+    //     "backgroundImage": "https:\/\/imgvisilabsnet.azureedge.net\/find_to_win\/uploaded_images\/test\/112_885_490_20221114163254892.jpg",
+    //     "buttonLabel": "Oyuna Başlad"
+    // },
+    "copybutton_text_color": "#fff",
+    "mailSubscriptionForm": {
+        "placeholder": "E-posta",
+        "consentText": "Koşulları kabul ediyorum",
+        "title": "Bul Kazana Hoşgeldiniz",
+        "message": "Tüm eşleşmeleri tamamla ve indirim kuponlarını kazan",
+        "checkConsentMessage": "Lüttfen tüm izinleri işaretleyin",
+        "invalidEmailMessage": "Email adresi hatalı",
+        "emailPermitText": "Eposta iletişim izni",
+        "buttonTitle": "Kaydet",
+        "successMessage": "Kayıt başarılı yönlendiriliyorsunuz."
+    },
+    "ios_lnk": "",
+    "title": "Find-To-Win-Test",
+    "report": {},
+    "promocode_background_color": "#1ec4d2",
+    "mailExtendedProps": {
+        "buttonTextSize": "10",
+        "textSize": "6",
+        "buttonTextColor": "#ffffff",
+        "titleTextColor": "#e85731",
+        "consentTextUrl": "https:\/\/www.relateddigital.com",
+        "consentTextSize": "5",
+        "textColor": "#e85731",
+        "emailPermitTextSize": "5",
+        "titleFontFamily": "",
+        "titleTextSize": "10",
+        "emailPermitTextUrl": "https:\/\/www.relateddigital.com",
+        "buttonColor": "#e85731"
+    },
+    "gameResultElementsExtended": {
+        "titleTextSize": "10",
+        "losebuttonTextSize": "10",
+        "losebuttonColor": "#383636",
+        "textSize": "10",
+        "titleTextColor": "#e85731",
+        "textColor": "#e85731",
+        "losebuttonTextColor": "#e85731"
+    },
+    "promocode_banner_button_label": "GET",
+    "targetingActionType": "findtowin",
+    "gamificationRulesExtended": {
+        "buttonTextSize": "10",
+        "buttonTextColor": "#fffb00",
+        "buttonColor": "#000000"
+    },
+    "background_color": "gray",
+    "close_button_color": "#383636",
+    "copybutton_label": "Kodu Kopyala",
+    "actId": 490,
+    "copybutton_text_size": "10",
+    "custom_font_family_ios": "'Poiret One', sans-serif",
+    "promocode_banner_text_color": "#e85731",
+    "backgroundImage": "bg.jpg",
+    "auth": "",
+    "promoCodes": [
+        {
+            "rangebottom": 1,
+            "rangetop": 5,
+            "staticcode": "KOD1000TL"
+        },
+        {
+            "rangebottom": 6,
+            "rangetop": 15,
+            "staticcode": "KOD25TL"
+        },
+        {
+            "rangebottom": 16,
+            "rangetop": 25,
+            "staticcode": "KOD15TL"
+        },
+        {
+            "rangebottom": 26,
+            "rangetop": 999,
+            "staticcode": "KOD10TL"
+        }
+    ],
+    "promocode_text_color": "#e85731",
+    "promocode_banner_text": "GET CODE",
+    "copybutton_color": "#e85731",
+    "copybutton_function": "copy",
+    "mailSubscription": true,
+    "font_family": "custom",
+    "gameElements": {
+        "playgroundColumncount": 4,
+        "playgroundRowcount": 3,
+        "soundUrl": "https:\/\/bariisarslans.github.io\/giftcatchgame\/sound.mp3",
+        "durationOfGame":60,
+        "cardImages": [
+            "apple.png",
+            "banana.png",
+            "cherries.png",
+            "dragon-fruit.png",
+            "grapes.png",
+            "mango.png",
+            "orange.png",
+            "watermelon.png"
+        ]
+    },
+    "gameResultElements": {
+        "loseImage": "https:\/\/imgvisilabsnet.azureedge.net\/find_to_win\/uploaded_images\/test\/112_885_490_20221018013614608.png",
+        "message": "Oyun Tamamlandı.\nKazandığınız indirim kuponunu kopyalayıp\nsiparişinizde kullanabilirsiniz.",
+        "title": "Tebrikler",
+        "loseButtonLabel": "Kazanamadınız",
+        "loseIosLnk": "https:\/\/www.relateddigital.com\/en\/"
+    },
+    "promocode_banner_background_color": "#2e3d49",
+    "gameElementsExtended": {
+        "scoreboardBackgroundColor": "#e85731",
+        "scoreboardShape": "rounded",
+        "scoreboardPageposition": "topLeft",
+        "backofcardsImage": "",
+        "backofcardsColor": "#e85731",
+        "blankcardImage": "https:\/\/imgvisilabsnet.azureedge.net\/find_to_win\/uploaded_images\/test\/112_885_490_20221114164359090.jpg"
+    }
+}
+initFindToWinGameIOS(responseConfig);
