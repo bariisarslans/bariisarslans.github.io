@@ -866,7 +866,7 @@ background-image: linear-gradient(to right top, #d16ba5, #c777b9, #ba83ca, #aa8f
           desktopWidth: "500px",
           mobileWidth: "300px",
           img: "clawmachinepopimg.jpeg",
-          url: "https://www.relateddigital.com/"
+          url: "https://www.example.com/"
       };
 
       function FirePopup() {

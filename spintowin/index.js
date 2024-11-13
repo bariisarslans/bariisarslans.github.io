@@ -78,7 +78,7 @@ function initGame() {
 			jQuery('#vl-wheel-content').append('<input type="text" value="' + coupon + '" id="vl-wheelCouponCode" readonly/>');
 			jQuery('#vl-wheel-content').append('<div id="vl-wheelCopyButton">KODU KOPYALA VE SEÇİLİ ÜRÜNLERE GİT</div>');
 			jQuery('#vl-wheel-content').append('<div id="vl-label" class="vl-text">*Bu fırsat farklı fırsatlar ile birleştirilemez.</div>');
-			jQuery('#vl-wheel-content').append('<div id="vl-label-2" class="vl-text">*Kupon kodu Related Digital markalarında geçerlidir.</div>');
+			jQuery('#vl-wheel-content').append('<div id="vl-label-2" class="vl-text">*Kupon kodu x markalarda geçerlidir.</div>');
 			document.getElementById('vl-wheelCopyButton').addEventListener("click", function () {
 				var copyText = document.getElementById("vl-wheelCouponCode");
 				copyText.select();

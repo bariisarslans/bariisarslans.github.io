@@ -231,8 +231,8 @@ function initFindToWinGameIOS(responseConfig) {
 }
 
 test = () => {
-    EMAIL = "example@relateddigital.com"
-    document.querySelector("#" + componentsData.mailSubsScreen.emailInput.id).setAttribute("value", "example@relateddigital.com")
+    EMAIL = "example@example.com"
+    document.querySelector("#" + componentsData.mailSubsScreen.emailInput.id).setAttribute("value", "example@example.com")
     document.querySelector("#" + componentsData.mailSubsScreen.emailPermission.id).setAttribute("checked", "true")
     document.querySelector("#" + componentsData.mailSubsScreen.secondPermission.id).setAttribute("checked", "true")
     // activePageData = {
@@ -2036,13 +2036,13 @@ let responseConfig = {
         "textSize": "6",
         "buttonTextColor": "#ffffff",
         "titleTextColor": "#e85731",
-        "consentTextUrl": "https:\/\/www.relateddigital.com",
+        "consentTextUrl": "https:\/\/www.example.com",
         "consentTextSize": "5",
         "textColor": "#e85731",
         "emailPermitTextSize": "5",
         "titleFontFamily": "",
         "titleTextSize": "10",
-        "emailPermitTextUrl": "https:\/\/www.relateddigital.com",
+        "emailPermitTextUrl": "https:\/\/www.example.com",
         "buttonColor": "#e85731"
     },
     "gameResultElementsExtended": {
@@ -2119,7 +2119,7 @@ let responseConfig = {
         "message": "Oyun Tamamlandı.\nKazandığınız indirim kuponunu kopyalayıp\nsiparişinizde kullanabilirsiniz.",
         "title": "Tebrikler",
         "loseButtonLabel": "Kazanamadınız",
-        "loseIosLnk": "https:\/\/www.relateddigital.com\/en\/"
+        "loseIosLnk": "https:\/\/www.example.com\/en\/"
     },
     "promocode_banner_background_color": "#2e3d49",
     "gameElementsExtended": {

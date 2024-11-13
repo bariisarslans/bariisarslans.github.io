@@ -242,8 +242,8 @@ function initGame(responseConfig) {
 }
 
 test = () => {
-    EMAIL = "example@relateddigital.com"
-    document.querySelector("#" + componentsData.mailSubsScreen.emailInput.id).setAttribute("value", "example@relateddigital.com")
+    EMAIL = "example@example.com"
+    document.querySelector("#" + componentsData.mailSubsScreen.emailInput.id).setAttribute("value", "example@example.com")
     document.querySelector("#" + componentsData.mailSubsScreen.emailPermission.id).setAttribute("checked", "true")
     document.querySelector("#" + componentsData.mailSubsScreen.secondPermission.id).setAttribute("checked", "true")
     // activePageData = {
