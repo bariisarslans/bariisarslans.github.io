@@ -237,7 +237,7 @@ var start = document.createElement("div");
   start.style.animation="boxScene 7s cubic-bezier(1, 1, 1, 1)";
   start.style.opacity="1";
   start.style.zIndex="9999";
-  start.innerHTML="<img style='position:absolute;z-index:9998;width:100%;height:100%' src='https://cdn.discordapp.com/attachments/807578340050993155/1045343117622128680/Paket.png'/>";
+  start.innerHTML="<img style='position:absolute;z-index:9998;width:100%;height:100%' src='./Paket.png'/>";
   
 var startDiv = document.createElement("DIV");
   startDiv.id="vl-startDiv";
@@ -252,7 +252,7 @@ var startDiv = document.createElement("DIV");
   
 var startAirplane = document.createElement("IMG");
   startAirplane.id="vl-startAirplane";
-  startAirplane.src="https://cdn.discordapp.com/attachments/807578340050993155/1045343063645618196/Geyikler.gif";
+  startAirplane.src="./Geyikler.gif";
   startAirplane.style.width="400px";
   startAirplane.style.maxWidth="none";
   startDiv.appendChild(startAirplane);
